@@ -1,10 +1,10 @@
 const db = require("../../models");
-const Contact = db.Contact;
+const SaleIssue = db.SaleIssue;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-    if (!req.body.name || !req.body.surname || !req.body.telephone || !req.body.email || !req.body.message || !req.fingerprintId) {
+    if (!req.body.payMethodId || !req.body.clientId || !req.body.cartId || !req.body.errorCode || !req.body.errorMessage) {
 
         res.status(400).send({
             message: "Faltan campos por rellenar."
@@ -13,16 +13,15 @@ exports.create = (req, res) => {
         return;
     }
 
-    const contact = {
-        name: req.body.name,
-        surname: req.body.surname,
-        telephone: req.body.telephone,
-        email: req.body.email,
-        message: req.body.message,
-        fingerprintId: req.body.fingerprintId
+    const saleIssue = {
+        payMethodId: req.body.payMethodId,
+        clientId: req.body.clientId,
+        cartId: req.body.cartId,
+        errorCode: req.body.errorCode,
+        errorMessage: req.body.errorMessage,
     };
 
-    Contact.create(contact).then(data => {
+    SaleIssue.create(saleIssue).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -35,21 +34,24 @@ exports.findAll = (req, res) => {
 
     let whereStatement = {};
 
-    if(req.query.name)
-        whereStatement.name = {[Op.substring]: req.query.name};
+    if(req.query.payMethodId)
+        whereStatement.payMethodId = {[Op.substring]: req.query.payMethodId};
         
-    if(req.query.surname)
-        whereStatement.surname = {[Op.substring]: req.query.surname};
+    if(req.query.clientId)
+        whereStatement.clientId = {[Op.substring]: req.query.clientId};
 
-    if(req.query.telephone)
-        whereStatement.telephone = {[Op.substring]: req.query.telephone};
+    if(req.query.cartId)
+        whereStatement.cartId = {[Op.substring]: req.query.cartId};
         
-    if(req.query.email)
-        whereStatement.email = {[Op.substring]: req.query.email};
+    if(req.query.errorCode)
+        whereStatement.errorCode = {[Op.substring]: req.query.errorCode};
+        
+    if(req.query.errorMessage)
+        whereStatement.errorMessage = {[Op.substring]: req.query.errorMessage};
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    Contact.findAll({ where: condition }).then(data => {
+    SaleIssue.findAll({ where: condition }).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -62,7 +64,7 @@ exports.findOne = (req, res) => {
 
     const id = req.params.id;
 
-    Contact.findByPk(id).then(data => {
+    SaleIssue.findByPk(id).then(data => {
 
         if (data) {
             res.status(200).send(data);
@@ -83,7 +85,7 @@ exports.update = (req, res) => {
 
     const id = req.params.id;
 
-    Contact.update(req.body, {
+    SaleIssue.update(req.body, {
         where: { id: id }
     }).then(num => {
         if (num == 1) {
@@ -106,7 +108,7 @@ exports.delete = (req, res) => {
 
     const id = req.params.id;
 
-    Contact.destroy({
+    SaleIssue.destroy({
         where: { id: id }
     }).then(num => {
         if (num == 1) {

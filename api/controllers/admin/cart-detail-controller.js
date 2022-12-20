@@ -1,10 +1,10 @@
 const db = require("../../models");
-const Contact = db.Contact;
+const CartDetail = db.CartDetail;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-    if (!req.body.name || !req.body.surname || !req.body.telephone || !req.body.email || !req.body.message || !req.fingerprintId) {
+    if (!req.body.cartId || !req.body.productId || !req.body.amount || !req.body.price || !req.body.measurementUnit || !req.body.productName || !req.body.taxType) {
 
         res.status(400).send({
             message: "Faltan campos por rellenar."
@@ -13,16 +13,17 @@ exports.create = (req, res) => {
         return;
     }
 
-    const contact = {
-        name: req.body.name,
-        surname: req.body.surname,
-        telephone: req.body.telephone,
-        email: req.body.email,
-        message: req.body.message,
-        fingerprintId: req.body.fingerprintId
+    const cartDetail = {
+        cartId: req.body.cartId,
+        productId: req.body.productId,
+        amount: req.body.amount,
+        price: req.body.price,
+        measurementUnit: req.body.measurementUnit,
+        productName: req.body.productName,
+        taxType: req.body.taxType
     };
 
-    Contact.create(contact).then(data => {
+    CartDetail.create(cartDetail).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -35,21 +36,30 @@ exports.findAll = (req, res) => {
 
     let whereStatement = {};
 
-    if(req.query.name)
-        whereStatement.name = {[Op.substring]: req.query.name};
+    if(req.query.cartId)
+        whereStatement.cartId = {[Op.substring]: req.query.cartId};
         
-    if(req.query.surname)
-        whereStatement.surname = {[Op.substring]: req.query.surname};
+    if(req.query.productId)
+        whereStatement.productId = {[Op.substring]: req.query.productId};
 
-    if(req.query.telephone)
-        whereStatement.telephone = {[Op.substring]: req.query.telephone};
+    if(req.query.amount)
+        whereStatement.amount = {[Op.substring]: req.query.amount};
         
-    if(req.query.email)
-        whereStatement.email = {[Op.substring]: req.query.email};
+    if(req.query.price)
+        whereStatement.price = {[Op.substring]: req.query.price};
+
+    if(req.query.measurementUnit)
+        whereStatement.measurementUnit = {[Op.substring]: req.query.measurementUnit};
+        
+    if(req.query.productName)
+        whereStatement.productName = {[Op.substring]: req.query.productName};
+        
+    if(req.query.taxType)
+        whereStatement.taxType = {[Op.substring]: req.query.taxType};
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    Contact.findAll({ where: condition }).then(data => {
+    CartDetail.findAll({ where: condition }).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -62,7 +72,7 @@ exports.findOne = (req, res) => {
 
     const id = req.params.id;
 
-    Contact.findByPk(id).then(data => {
+    CartDetail.findByPk(id).then(data => {
 
         if (data) {
             res.status(200).send(data);
@@ -83,7 +93,7 @@ exports.update = (req, res) => {
 
     const id = req.params.id;
 
-    Contact.update(req.body, {
+    CartDetail.update(req.body, {
         where: { id: id }
     }).then(num => {
         if (num == 1) {
@@ -106,7 +116,7 @@ exports.delete = (req, res) => {
 
     const id = req.params.id;
 
-    Contact.destroy({
+    CartDetail.destroy({
         where: { id: id }
     }).then(num => {
         if (num == 1) {

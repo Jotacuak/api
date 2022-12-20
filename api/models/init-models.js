@@ -2,6 +2,7 @@ var DataTypes = require("sequelize").DataTypes;
 var _CartDetail = require("./cart-detail");
 var _Cart = require("./cart");
 var _Client = require("./client");
+var _CompanyDetail = require("./company-detail");
 var _Contact = require("./contact");
 var _Fingerprint = require("./fingerprint");
 var _ImageConfig = require("./image-config");
@@ -24,6 +25,7 @@ function initModels(sequelize) {
     var CartDetail = _CartDetail(sequelize, DataTypes);
     var Cart = _Cart(sequelize, DataTypes);
     var Client = _Client(sequelize, DataTypes);
+    var CompanyDetail = _CompanyDetail(sequelize, DataTypes);
     var Contact = _Contact(sequelize, DataTypes);
     var Fingerprint = _Fingerprint(sequelize, DataTypes);
     var ImageConfig = _ImageConfig(sequelize, DataTypes);
@@ -93,6 +95,7 @@ function initModels(sequelize) {
         CartDetail,
         Cart,
         Client,
+        CompanyDetail,
         Contact,
         Fingerprint,
         ImageConfig,

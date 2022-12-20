@@ -1,10 +1,10 @@
 const db = require("../../models");
-const Tax = db.Tax;
+const CompanyDetail = db.CompanyDetail;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-    if (!req.body.type) {
+    if (!req.body.name || !req.body.phoneNumber || !req.body.mobileNumber || !req.body.cifNumber || !req.body.openingDays || !req.body.customerServiceHours || !req.body.visible) {
 
         res.status(400).send({
             message: "Faltan campos por rellenar."
@@ -13,12 +13,17 @@ exports.create = (req, res) => {
         return;
     }
 
-    const tax = {
-        type: req.body.type,
-        valid: req.body.valid ? req.body.valid : true
+    const companyDetail = {
+        name: req.body.name,
+        phoneNumber: req.body.phoneNumber,
+        mobileNumber: req.body.mobileNumber,
+        cifNumber: req.body.cifNumber,
+        openingDays: req.body.openingDays,
+        customerServiceHours: req.body.customerServiceHours,
+        visible: req.body.visible ? req.body.visible : true
     };
 
-    Tax.create(tax).then(data => {
+    CompanyDetail.create(companyDetail).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -31,15 +36,30 @@ exports.findAll = (req, res) => {
 
     let whereStatement = {};
 
-    if(req.query.type)
-        whereStatement.type = {[Op.substring]: req.query.type};
+    if(req.query.name)
+        whereStatement.name = {[Op.substring]: req.query.name};
         
-    if(req.query.valid)
-        whereStatement.valid = {[Op.substring]: req.query.valid};
+    if(req.query.phoneNumber)
+        whereStatement.phoneNumber = {[Op.substring]: req.query.phoneNumber};
+
+    if(req.query.mobileNumber)
+        whereStatement.mobileNumber = {[Op.substring]: req.query.mobileNumber};
+        
+    if(req.query.cifNumber)
+        whereStatement.cifNumber = {[Op.substring]: req.query.cifNumber};
+
+    if(req.query.openingDays)
+        whereStatement.openingDays = {[Op.substring]: req.query.openingDays};
+        
+    if(req.query.customerServiceHours)
+        whereStatement.customerServiceHours = {[Op.substring]: req.query.customerServiceHours};
+
+    if(req.query.visible)
+        whereStatement.visible = {[Op.substring]: req.query.visible};
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    Tax.findAll({ where: condition }).then(data => {
+    CompanyDetail.findAll({ where: condition }).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -52,7 +72,7 @@ exports.findOne = (req, res) => {
 
     const id = req.params.id;
 
-    Tax.findByPk(id).then(data => {
+    CompanyDetail.findByPk(id).then(data => {
 
         if (data) {
             res.status(200).send(data);
@@ -73,7 +93,7 @@ exports.update = (req, res) => {
 
     const id = req.params.id;
 
-    Tax.update(req.body, {
+    CompanyDetail.update(req.body, {
         where: { id: id }
     }).then(num => {
         if (num == 1) {
@@ -96,7 +116,7 @@ exports.delete = (req, res) => {
 
     const id = req.params.id;
 
-    Tax.destroy({
+    CompanyDetail.destroy({
         where: { id: id }
     }).then(num => {
         if (num == 1) {

@@ -1,10 +1,10 @@
 const db = require("../../models");
-const Tax = db.Tax;
+const ProductCategory = db.ProductCategory;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-    if (!req.body.type) {
+    if (!req.body.name) {
 
         res.status(400).send({
             message: "Faltan campos por rellenar."
@@ -13,12 +13,11 @@ exports.create = (req, res) => {
         return;
     }
 
-    const tax = {
-        type: req.body.type,
-        valid: req.body.valid ? req.body.valid : true
+    const productCategory = {
+        name: req.body.name,
     };
 
-    Tax.create(tax).then(data => {
+    ProductCategory.create(productCategory).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -31,15 +30,12 @@ exports.findAll = (req, res) => {
 
     let whereStatement = {};
 
-    if(req.query.type)
-        whereStatement.type = {[Op.substring]: req.query.type};
-        
-    if(req.query.valid)
-        whereStatement.valid = {[Op.substring]: req.query.valid};
+    if(req.query.name)
+        whereStatement.name = {[Op.substring]: req.query.name};
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    Tax.findAll({ where: condition }).then(data => {
+    ProductCategory.findAll({ where: condition }).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -52,7 +48,7 @@ exports.findOne = (req, res) => {
 
     const id = req.params.id;
 
-    Tax.findByPk(id).then(data => {
+    ProductCategory.findByPk(id).then(data => {
 
         if (data) {
             res.status(200).send(data);
@@ -73,7 +69,7 @@ exports.update = (req, res) => {
 
     const id = req.params.id;
 
-    Tax.update(req.body, {
+    ProductCategory.update(req.body, {
         where: { id: id }
     }).then(num => {
         if (num == 1) {
@@ -96,7 +92,7 @@ exports.delete = (req, res) => {
 
     const id = req.params.id;
 
-    Tax.destroy({
+    ProductCategory.destroy({
         where: { id: id }
     }).then(num => {
         if (num == 1) {

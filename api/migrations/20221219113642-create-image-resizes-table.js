@@ -77,7 +77,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER.UNSIGNED
       },
-      heighyPx: {
+      heighPx: {
         allowNull: false,
         type: Sequelize.INTEGER.UNSIGNED
       },

@@ -4,7 +4,7 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
    
-    await queryInterface.createTable('contacts', {
+    await queryInterface.createTable('company-details', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -15,30 +15,29 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      surname: {
+      phoneNumber: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      mobileNumber: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      cifNumber: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      openingDays: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      telephone: {
-        allowNull: false,
-        type: Sequelize.STRING(20)
-      },
-      email: {
+      customerServiceHours: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      message: {
+      visible: {
         allowNull: false,
-        type: Sequelize.TEXT
-      },
-      fingerprintId: { 
-        type: Sequelize.INTEGER, 
-        references: { 
-              model: 'fingerprints', 
-              key: 'id' 
-        }, 
-        onUpdate: 'CASCADE', 
-        onDelete: 'SET NULL' 
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -57,6 +56,6 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
    
-    await queryInterface.dropTable('contacts');
+    await queryInterface.dropTable('company-details');
   }
 };

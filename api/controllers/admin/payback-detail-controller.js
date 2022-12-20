@@ -1,10 +1,10 @@
 const db = require("../../models");
-const Tax = db.Tax;
+const PaybackDetail = db.PaybackDetail;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-    if (!req.body.type) {
+    if (!req.body.paybackId || !req.body.productId || !req.body.amount || !req.body.price || !req.body.measurementUnit || !req.body.productName || !req.body.ivaType) {
 
         res.status(400).send({
             message: "Faltan campos por rellenar."
@@ -13,12 +13,17 @@ exports.create = (req, res) => {
         return;
     }
 
-    const tax = {
-        type: req.body.type,
-        valid: req.body.valid ? req.body.valid : true
+    const paybackDetail = {
+        paybackId: req.body.paybackId,
+        productId: req.body.productId,
+        amount: req.body.amount,
+        price: req.body.price,
+        measurementUnit: req.body.measurementUnit,
+        productName: req.body.productName,
+        ivaType: req.body.ivaType,
     };
 
-    Tax.create(tax).then(data => {
+    PaybackDetail.create(paybackDetail).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -31,15 +36,30 @@ exports.findAll = (req, res) => {
 
     let whereStatement = {};
 
-    if(req.query.type)
-        whereStatement.type = {[Op.substring]: req.query.type};
+    if(req.query.paybackId)
+        whereStatement.paybackId = {[Op.substring]: req.query.paybackId};
         
-    if(req.query.valid)
-        whereStatement.valid = {[Op.substring]: req.query.valid};
+    if(req.query.productId)
+        whereStatement.productId = {[Op.substring]: req.query.productId};
+
+    if(req.query.amount)
+        whereStatement.amount = {[Op.substring]: req.query.amount};
+        
+    if(req.query.price)
+        whereStatement.price = {[Op.substring]: req.query.price};
+
+    if(req.query.measurementUnit)
+        whereStatement.measurementUnit = {[Op.substring]: req.query.measurementUnit};
+        
+    if(req.query.productName)
+        whereStatement.productName = {[Op.substring]: req.query.productName};
+        
+    if(req.query.ivaType)
+        whereStatement.ivaType = {[Op.substring]: req.query.ivaType};
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    Tax.findAll({ where: condition }).then(data => {
+    PaybackDetail.findAll({ where: condition }).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -52,7 +72,7 @@ exports.findOne = (req, res) => {
 
     const id = req.params.id;
 
-    Tax.findByPk(id).then(data => {
+    PaybackDetail.findByPk(id).then(data => {
 
         if (data) {
             res.status(200).send(data);
@@ -73,7 +93,7 @@ exports.update = (req, res) => {
 
     const id = req.params.id;
 
-    Tax.update(req.body, {
+    PaybackDetail.update(req.body, {
         where: { id: id }
     }).then(num => {
         if (num == 1) {
@@ -96,7 +116,7 @@ exports.delete = (req, res) => {
 
     const id = req.params.id;
 
-    Tax.destroy({
+    PaybackDetail.destroy({
         where: { id: id }
     }).then(num => {
         if (num == 1) {

@@ -1,55 +1,43 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-    return sequelize.define('ImageConfig', {
+    return sequelize.define('CompanyDetail', {
         id: {
             autoIncrement: true,
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true
         },
-        entity: {
+        name: {
             type: DataTypes.STRING(255),
             allowNull: false
         },
-        directory: {
+        phoneNumber: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        mobileNumber: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        cifNumber: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        openingDays: {
             type: DataTypes.STRING(255),
             allowNull: false
         },
-        type: {
+        customerServiceHours: {
             type: DataTypes.STRING(255),
             allowNull: false
         },
-        content: {
-            type: DataTypes.STRING(255),
-            allowNull: false
-        },
-        grid: {
-            type: DataTypes.STRING(255),
-            allowNull: false
-        },
-        contentAccepted: {
-            type: DataTypes.STRING(255),
-            allowNull: false
-        },
-        extensionConversion: {
-            type: DataTypes.STRING(4),
-            allowNull: false
-        },
-        widthPx: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: false
-        },
-        heighPx: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: false
-        },
-        quality: {
-            type: DataTypes.INTEGER.UNSIGNED,
+        visible: {
+            type: DataTypes.BOOLEAN,
             allowNull: false
         }
     }, {
         sequelize,
-        tableName: 'image_configs',
+        tableName: 'company-details',
         timestamps: true,
         paranoid: true,
         indexes: [

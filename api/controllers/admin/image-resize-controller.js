@@ -1,24 +1,10 @@
 const db = require("../../models");
-const Tax = db.Tax;
+const ImageResize = db.ImageResize;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-    if (!req.body.type) {
-
-        res.status(400).send({
-            message: "Faltan campos por rellenar."
-        });
-
-        return;
-    }
-
-    const tax = {
-        type: req.body.type,
-        valid: req.body.valid ? req.body.valid : true
-    };
-
-    Tax.create(tax).then(data => {
+    ImageResize.create(req.body).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -31,15 +17,42 @@ exports.findAll = (req, res) => {
 
     let whereStatement = {};
 
-    if(req.query.type)
-        whereStatement.type = {[Op.substring]: req.query.type};
+    if(req.query.imageOriginalId)
+        whereStatement.imageOriginalId = {[Op.substring]: req.query.imageOriginalId};
         
-    if(req.query.valid)
-        whereStatement.valid = {[Op.substring]: req.query.valid};
+    if(req.query.imageConfigurationId)
+        whereStatement.imageConfigurationId = {[Op.substring]: req.query.imageConfigurationId};
+
+    if(req.query.title)
+        whereStatement.title = {[Op.substring]: req.query.title};
+        
+    if(req.query.alt)
+        whereStatement.alt = {[Op.substring]: req.query.alt};
+
+    if(req.query.entity)
+        whereStatement.entity = {[Op.substring]: req.query.entity};
+        
+    if(req.query.entityId)
+        whereStatement.entityId = {[Op.substring]: req.query.entityId};
+        
+    if(req.query.languageAlias)
+        whereStatement.languageAlias = {[Op.substring]: req.query.languageAlias};
+
+    if(req.query.content)
+        whereStatement.content = {[Op.substring]: req.query.content};
+
+    if(req.query.mimeType)
+        whereStatement.mimeType = {[Op.substring]: req.query.mimeType};
+        
+    if(req.query.grid)
+        whereStatement.grid = {[Op.substring]: req.query.grid};
+        
+    if(req.query.sizeBytes)
+        whereStatement.sizeBytes = {[Op.substring]: req.query.sizeBytes};
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    Tax.findAll({ where: condition }).then(data => {
+    ImageResize.findAll({ where: condition }).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -52,7 +65,7 @@ exports.findOne = (req, res) => {
 
     const id = req.params.id;
 
-    Tax.findByPk(id).then(data => {
+    ImageResize.findByPk(id).then(data => {
 
         if (data) {
             res.status(200).send(data);
@@ -73,7 +86,7 @@ exports.update = (req, res) => {
 
     const id = req.params.id;
 
-    Tax.update(req.body, {
+    ImageResize.update(req.body, {
         where: { id: id }
     }).then(num => {
         if (num == 1) {
@@ -96,7 +109,7 @@ exports.delete = (req, res) => {
 
     const id = req.params.id;
 
-    Tax.destroy({
+    ImageResize.destroy({
         where: { id: id }
     }).then(num => {
         if (num == 1) {

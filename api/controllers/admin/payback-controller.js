@@ -1,10 +1,11 @@
 const db = require("../../models");
-const Tax = db.Tax;
+const Payback = db.Payback;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-    if (!req.body.type) {
+    if (!req.body.saleId || !req.body.clientId || !req.body.payMethodId || !req.body.reference || !req.body.totalPrice || !req.body.totalBasePrice || !req.body.totalIvaPrice || !req.body.broadcastDate
+        || !req.body.broadcastHour) {
 
         res.status(400).send({
             message: "Faltan campos por rellenar."
@@ -13,12 +14,19 @@ exports.create = (req, res) => {
         return;
     }
 
-    const tax = {
-        type: req.body.type,
-        valid: req.body.valid ? req.body.valid : true
+    const payback = {
+        saleId: req.body.saleId,
+        clientId: req.body.clientId,
+        payMethodId: req.body.payMethodId,
+        reference: req.body.reference,
+        totalPrice: req.body.totalPrice,
+        totalBasePrice: req.body.totalBasePrice,
+        totalIvaPrice: req.body.totalIvaPrice,
+        broadcastDate: req.body.broadcastDate,
+        broadcastHour: req.body.broadcastHour,
     };
 
-    Tax.create(tax).then(data => {
+    Payback.create(payback).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -31,15 +39,36 @@ exports.findAll = (req, res) => {
 
     let whereStatement = {};
 
-    if(req.query.type)
-        whereStatement.type = {[Op.substring]: req.query.type};
+    if(req.query.saleId)
+        whereStatement.saleId = {[Op.substring]: req.query.saleId};
         
-    if(req.query.valid)
-        whereStatement.valid = {[Op.substring]: req.query.valid};
+    if(req.query.clientId)
+        whereStatement.clientId = {[Op.substring]: req.query.clientId};
+
+    if(req.query.payMethodId)
+        whereStatement.payMethodId = {[Op.substring]: req.query.payMethodId};
+        
+    if(req.query.reference)
+        whereStatement.reference = {[Op.substring]: req.query.reference};
+
+    if(req.query.totalPrice)
+        whereStatement.totalPrice = {[Op.substring]: req.query.totalPrice};
+        
+    if(req.query.totalBasePrice)
+        whereStatement.totalBasePrice = {[Op.substring]: req.query.totalBasePrice};
+
+    if(req.query.totalIvaPrice)
+        whereStatement.totalIvaPrice = {[Op.substring]: req.query.totalIvaPrice};
+        
+    if(req.query.broadcastDate)
+        whereStatement.broadcastDate = {[Op.substring]: req.query.broadcastDate};
+        
+    if(req.query.broadcastHour)
+        whereStatement.broadcastHour = {[Op.substring]: req.query.broadcastHour};
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    Tax.findAll({ where: condition }).then(data => {
+    Payback.findAll({ where: condition }).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -52,7 +81,7 @@ exports.findOne = (req, res) => {
 
     const id = req.params.id;
 
-    Tax.findByPk(id).then(data => {
+    Payback.findByPk(id).then(data => {
 
         if (data) {
             res.status(200).send(data);
@@ -73,7 +102,7 @@ exports.update = (req, res) => {
 
     const id = req.params.id;
 
-    Tax.update(req.body, {
+    Payback.update(req.body, {
         where: { id: id }
     }).then(num => {
         if (num == 1) {
@@ -96,7 +125,7 @@ exports.delete = (req, res) => {
 
     const id = req.params.id;
 
-    Tax.destroy({
+    Payback.destroy({
         where: { id: id }
     }).then(num => {
         if (num == 1) {

@@ -1,10 +1,10 @@
 const db = require("../../models");
-const Tax = db.Tax;
+const ImageConfig = db.ImageConfig;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-    if (!req.body.type) {
+    if (!req.body.entity || !req.body.directory || !req.body.type || !req.body.content || !req.body.grid || !req.body.contentAccepted || !req.body.extensionConversion || !req.body.widthPx || !req.body.heighPx || !req.body.quality) {
 
         res.status(400).send({
             message: "Faltan campos por rellenar."
@@ -13,12 +13,20 @@ exports.create = (req, res) => {
         return;
     }
 
-    const tax = {
+    const imageConfig = {
+        entity: req.body.entity,
+        directory: req.body.directory,
         type: req.body.type,
-        valid: req.body.valid ? req.body.valid : true
+        content: req.body.content,
+        grid: req.body.grid,
+        contentAccepted: req.body.contentAccepted,
+        extensionConversion: req.body.extensionConversion,
+        widthPx: req.body.widthPx,
+        heighPx: req.body.heighPx,
+        quality: req.body.quality
     };
 
-    Tax.create(tax).then(data => {
+    ImageConfig.create(imageConfig).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -31,15 +39,30 @@ exports.findAll = (req, res) => {
 
     let whereStatement = {};
 
-    if(req.query.type)
-        whereStatement.type = {[Op.substring]: req.query.type};
+    if(req.query.entity)
+        whereStatement.entity = {[Op.substring]: req.query.entity};
         
-    if(req.query.valid)
-        whereStatement.valid = {[Op.substring]: req.query.valid};
+    if(req.query.directory)
+        whereStatement.directory = {[Op.substring]: req.query.directory};
+
+    if(req.query.grid)
+        whereStatement.grid = {[Op.substring]: req.query.grid};
+        
+    if(req.query.contentAccepted)
+        whereStatement.contentAccepted = {[Op.substring]: req.query.contentAccepted};
+
+    if(req.query.extensionConversion)
+        whereStatement.extensionConversion = {[Op.substring]: req.query.extensionConversion};
+        
+    if(req.query.widthPx)
+        whereStatement.widthPx = {[Op.substring]: req.query.widthPx};
+        
+    if(req.query.heightPx)
+        whereStatement.heightPx = {[Op.substring]: req.query.heightPx};
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    Tax.findAll({ where: condition }).then(data => {
+    ImageConfig.findAll({ where: condition }).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -52,7 +75,7 @@ exports.findOne = (req, res) => {
 
     const id = req.params.id;
 
-    Tax.findByPk(id).then(data => {
+    ImageConfig.findByPk(id).then(data => {
 
         if (data) {
             res.status(200).send(data);
@@ -73,7 +96,7 @@ exports.update = (req, res) => {
 
     const id = req.params.id;
 
-    Tax.update(req.body, {
+    ImageConfig.update(req.body, {
         where: { id: id }
     }).then(num => {
         if (num == 1) {
@@ -96,7 +119,7 @@ exports.delete = (req, res) => {
 
     const id = req.params.id;
 
-    Tax.destroy({
+    ImageConfig.destroy({
         where: { id: id }
     }).then(num => {
         if (num == 1) {

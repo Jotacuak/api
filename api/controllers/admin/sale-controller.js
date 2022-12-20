@@ -1,10 +1,11 @@
 const db = require("../../models");
-const ImageConfiguration = db.ImageConfiguration;
+const Sale = db.Sale;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-    if (!req.body.type) {
+    if (!req.body.cartId || !req.body.clientId || !req.body.payMethodId || !req.body.reference || !req.body.totalPrice || !req.body.totalBasePrice 
+        || !req.body.totalIvaPrice || !req.body.broadcastDate || !req.body.broadcastHour) {
 
         res.status(400).send({
             message: "Faltan campos por rellenar."
@@ -13,12 +14,19 @@ exports.create = (req, res) => {
         return;
     }
 
-    const imageConfiguration = {
-        type: req.body.type,
-        valid: req.body.valid ? req.body.valid : true
+    const sale = {
+        cartId: req.body.cartId,
+        clientId: req.body.clientId,
+        payMethodId: req.body.payMethodId,
+        reference: req.body.reference,
+        totalPrice: req.body.totalPrice,
+        totalBasePrice: req.body.totalBasePrice,
+        totalIvaPrice: req.body.totalIvaPrice,
+        broadcastDate: req.body.broadcastDate,
+        broadcastHour: req.body.broadcastHour,
     };
 
-    ImageConfiguration.create(imageConfiguration).then(data => {
+    Sale.create(sale).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -31,15 +39,36 @@ exports.findAll = (req, res) => {
 
     let whereStatement = {};
 
-    if(req.query.type)
-        whereStatement.type = {[Op.substring]: req.query.type};
+    if(req.query.cartId)
+        whereStatement.cartId = {[Op.substring]: req.query.cartId};
         
-    if(req.query.valid)
-        whereStatement.valid = {[Op.substring]: req.query.valid};
+    if(req.query.clientId)
+        whereStatement.clientId = {[Op.substring]: req.query.clientId};
+        
+    if(req.query.payMethodId)
+    whereStatement.payMethodId = {[Op.substring]: req.query.payMethodId};
+    
+    if(req.query.reference)
+    whereStatement.reference = {[Op.substring]: req.query.reference};
+    
+    if(req.query.totalPrice)
+        whereStatement.totalPrice = {[Op.substring]: req.query.totalPrice};
+        
+    if(req.query.totalBasePrice)
+        whereStatement.totalBasePrice = {[Op.substring]: req.query.totalBasePrice};
+        
+    if(req.query.totalIvaPrice)
+    whereStatement.totalIvaPrice = {[Op.substring]: req.query.totalIvaPrice};
+    
+    if(req.query.broadcastDate)
+    whereStatement.broadcastDate = {[Op.substring]: req.query.broadcastDate};
+        
+    if(req.query.broadcastHour)
+        whereStatement.broadcastHour = {[Op.substring]: req.query.broadcastHour};
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    ImageConfiguration.findAll({ where: condition }).then(data => {
+    Sale.findAll({ where: condition }).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -52,7 +81,7 @@ exports.findOne = (req, res) => {
 
     const id = req.params.id;
 
-    ImageConfiguration.findByPk(id).then(data => {
+    Sale.findByPk(id).then(data => {
 
         if (data) {
             res.status(200).send(data);
@@ -73,7 +102,7 @@ exports.update = (req, res) => {
 
     const id = req.params.id;
 
-    ImageConfiguration.update(req.body, {
+    Sale.update(req.body, {
         where: { id: id }
     }).then(num => {
         if (num == 1) {
@@ -96,7 +125,7 @@ exports.delete = (req, res) => {
 
     const id = req.params.id;
 
-    ImageConfiguration.destroy({
+    Sale.destroy({
         where: { id: id }
     }).then(num => {
         if (num == 1) {

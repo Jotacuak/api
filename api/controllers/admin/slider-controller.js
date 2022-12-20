@@ -13,7 +13,7 @@ exports.create = (req, res) => {
         return;
     }
 
-    const tax = {
+    const slider = {
         name: req.body.name,
     };
 
@@ -30,12 +30,12 @@ exports.findAll = (req, res) => {
 
     let whereStatement = {};
 
-    if(req.query.slider)
-        whereStatement.slider = {[Op.substring]: req.query.slider};
+    if(req.query.name)
+        whereStatement.name = {[Op.substring]: req.query.name};
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    Tax.findAll({ where: condition }).then(data => {
+    Slider.findAll({ where: condition }).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
