@@ -13,6 +13,14 @@ module.exports = function(sequelize, DataTypes) {
             references: {
                 model: 'carts',
                 key: 'id'
+            },
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo carrito ID."
+                },
+                isInt:{
+                    msg: "Error en el campo carrito ID. Debe ser un número entero"
+                }
             }
         },
         clientId: {
@@ -21,6 +29,14 @@ module.exports = function(sequelize, DataTypes) {
             references: {
                 model: 'clients',
                 key: 'id'
+            },
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo cliente ID."
+                },
+                isInt:{
+                    msg: "Error en el campo cliente ID. Debe ser un número entero."
+                }
             }
         },
         payMethodId: {
@@ -29,31 +45,87 @@ module.exports = function(sequelize, DataTypes) {
             references: {
                 model: 'pay_methods',
                 key: 'id'
+            },
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo método de pago ID."
+                },
+                isInt:{
+                    msg: "Error en el campo método de pago ID. Debe ser un número entero."
+                }
             }
         },
         reference: {
             type: DataTypes.STRING(255),
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo referencia."
+                },
+                notEmpty:{
+                    msg: "Debe rellenar el campo referencia."
+                },
+                isAlpha:{
+                    msg: "Error en el campo referencia. Solo puede contener letras."
+                }
+            }
         },
         totalPrice: {
             type: DataTypes.DECIMAL(10,0),
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo precio total."
+                },
+                isNumeric:{
+                    msg: "Error en el campo precio total. Solo puede contener números."
+                }
+            }
         },
         totalBasePrice: {
             type: DataTypes.DECIMAL(10,0),
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo precio base total."
+                },
+                isNumeric:{
+                    msg: "Error en el campo precio base total. Solo puede contener números."
+                }
+            }
         },
         totalIvaPrice: {
             type: DataTypes.DECIMAL(10,0),
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo precio iva total."
+                },
+                isNumeric:{
+                    msg: "Error en el campo precio iva total. Solo puede contener números."
+                }
+            }
         },
         broadcastDate: {
             type: DataTypes.DATEONLY,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo fecha emisión ."
+                },
+                isDate:{
+                    msg: "Error en el campo fecha emisión. Solo puede contener una fecha."
+                }
+            }
         },
         broadcastHour: {
             type: DataTypes.TIME,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo hora emisión ."
+                }
+            }
         }
     }, {
         sequelize,

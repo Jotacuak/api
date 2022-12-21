@@ -15,7 +15,7 @@ module.exports = function(sequelize, DataTypes) {
                     msg: "Debe rellenar el campo nombre."
                 },
                 notEmpty:{
-                    msg: "Debe rellenar el campo unidad de medida."
+                    msg: "El campo nombre no puede estar vacio."
                 },
                 isAlpha:{
                     msg: "Error en el campo nombre.  Solo puede contener ser letras."
@@ -24,7 +24,15 @@ module.exports = function(sequelize, DataTypes) {
         },
         price: {
             type: DataTypes.DECIMAL(10,0),
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo precio."
+                },
+                isNumeric:{
+                    msg: "Error en el campo precio. Debe ser un número"
+                }
+            }
         },
         taxId: {
             type: DataTypes.INTEGER,
@@ -32,11 +40,20 @@ module.exports = function(sequelize, DataTypes) {
             references: {
                 model: 'taxes',
                 key: 'id'
+            },
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo IVA ID."
+                },
+                isInt:{
+                    msg: "Error en el campo IVA ID. Debe ser un número entero."
+                }
             }
         },
         featured: {
             type: DataTypes.BOOLEAN,
-            allowNull: false
+            allowNull: false,
+            defaultValue: true
         },
         categoryId: {
             type: DataTypes.INTEGER,
@@ -44,6 +61,14 @@ module.exports = function(sequelize, DataTypes) {
             references: {
                 model: 'product_categories',
                 key: 'id'
+            },
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo categoría ID."
+                },
+                isInt:{
+                    msg: "Error en el campo categoría ID. Debe ser un número entero."
+                }
             }
         }
     }, {
