@@ -4,20 +4,7 @@ const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-    if (!req.body.name) {
-
-        res.status(400).send({
-            message: "Faltan campos por rellenar."
-        });
-
-        return;
-    }
-
-    const productCategory = {
-        name: req.body.name,
-    };
-
-    ProductCategory.create(productCategory).then(data => {
+    ProductCategory.create(req.body).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({

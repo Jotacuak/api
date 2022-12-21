@@ -9,7 +9,18 @@ module.exports = function(sequelize, DataTypes) {
         },
         name: {
             type: DataTypes.STRING(255),
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo nombre."
+                },
+                notEmpty:{
+                    msg: "El campo nombre no puede estar vacio."
+                },
+                isAlpha:{
+                    msg: "Error en el campo nombre. Solo puede contener ser letras."
+                }
+            }
         },
         clientId: {
             type: DataTypes.INTEGER,
@@ -17,6 +28,14 @@ module.exports = function(sequelize, DataTypes) {
             references: {
                 model: 'clients',
                 key: 'id'
+            },
+            validate: {
+                notEmpty:{
+                    msg: "Debe rellenar el campo cliente ID."
+                },
+                isInt:{
+                    msg: "Error en el campo cliente ID. Debe ser un número entero"
+                }
             }
         },
         fingerprintId: {
@@ -25,6 +44,14 @@ module.exports = function(sequelize, DataTypes) {
             references: {
                 model: 'fingerprints',
                 key: 'id'
+            },
+            validate: {
+                notEmpty:{
+                    msg: "Debe rellenar el campo huella ID."
+                },
+                isInt:{
+                    msg: "Error en el campo huella ID. Debe ser un número entero"
+                }
             }
         }
     }, {

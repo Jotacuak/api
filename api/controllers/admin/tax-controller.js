@@ -4,21 +4,7 @@ const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-    if (!req.body.type) {
-
-        res.status(400).send({
-            message: "Faltan campos por rellenar."
-        });
-
-        return;
-    }
-
-    const tax = {
-        type: req.body.type,
-        valid: req.body.valid ? req.body.valid : true
-    };
-
-    Tax.create(tax).then(data => {
+    Tax.create(req.body).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({

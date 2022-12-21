@@ -9,11 +9,20 @@ module.exports = function(sequelize, DataTypes) {
         },
         type: {
             type: DataTypes.INTEGER,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo tipo."
+                },
+                isNumeric:{
+                    msg: "Error en el campo tipo. Debe ser un número"
+                }
+            }
         },
         valid: {
             type: DataTypes.BOOLEAN,
-            allowNull: false
+            allowNull: false,
+            defaultValue: true
         }
     }, {
         sequelize,

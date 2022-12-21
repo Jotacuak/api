@@ -9,23 +9,78 @@ module.exports = function(sequelize, DataTypes) {
         },
         name: {
             type: DataTypes.STRING(255),
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo nombre."
+                },
+                notEmpty:{
+                    msg: "El campo nombre no puede estar vacio."
+                },
+                isAlpha:{
+                    msg: "Error en el campo nombre. Solo puede contener ser letras."
+                }
+            }
         },
         surname: {
             type: DataTypes.STRING(255),
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo apellido."
+                },
+                notEmpty:{
+                    msg: "El campo apellido no puede estar vacio."
+                },
+                isAlpha:{
+                    msg: "Error en el campo apellido. Solo puede contener ser letras."
+                }
+            }
         },
         telephone: {
             type: DataTypes.STRING(20),
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo teléfono."
+                },                
+                notEmpty:{
+                    msg: "El campo teléfono no puede estar vacio."
+                },
+                isNumeric:{
+                    msg: "Error en el campo teléfono. Solo puede contener números."
+                }
+            }
         },
         email: {
             type: DataTypes.STRING(255),
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo email."
+                },
+                notEmpty:{
+                    msg: "El campo email no puede estar vacio."
+                },
+                isEmail:{
+                    msg: "Error en el campo email. No es un email válido."
+                }
+            }
         },
         message: {
             type: DataTypes.STRING(255),
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo mensaje."
+                },
+                notEmpty:{
+                    msg: "El campo mensaje no puede estar vacio."
+                },
+                isAlphaumeric:{
+                    msg: "Error en el mensaje. Solo puede contener caracteres alfanuméricos."
+                }
+            }
         },
         fingerprintId: {
             type: DataTypes.INTEGER,
@@ -33,6 +88,14 @@ module.exports = function(sequelize, DataTypes) {
             references: {
                 model: 'fingerprints',
                 key: 'id'
+            },
+            validate: {
+                notEmpty:{
+                    msg: "Debe rellenar el campo huella ID."
+                },
+                isInt:{
+                    msg: "Error en el campo huella ID. Debe ser un número entero"
+                }
             }
         }
     }, {

@@ -4,26 +4,7 @@ const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-    if (!req.body.paybackId || !req.body.productId || !req.body.amount || !req.body.price || !req.body.measurementUnit || !req.body.productName || !req.body.ivaType) {
-
-        res.status(400).send({
-            message: "Faltan campos por rellenar."
-        });
-
-        return;
-    }
-
-    const paybackDetail = {
-        paybackId: req.body.paybackId,
-        productId: req.body.productId,
-        amount: req.body.amount,
-        price: req.body.price,
-        measurementUnit: req.body.measurementUnit,
-        productName: req.body.productName,
-        ivaType: req.body.ivaType,
-    };
-
-    PaybackDetail.create(paybackDetail).then(data => {
+    PaybackDetail.create(req.body).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({

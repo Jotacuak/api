@@ -9,7 +9,18 @@ module.exports = function(sequelize, DataTypes) {
         },
         name: {
             type: DataTypes.STRING(255),
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo nombre."
+                },
+                notEmpty:{
+                    msg: "Debe rellenar el campo unidad de medida."
+                },
+                isAlpha:{
+                    msg: "Error en el campo nombre. Solo puede contener ser letras."
+                }
+            }
         },
         alias: {
             type: DataTypes.STRING(2),

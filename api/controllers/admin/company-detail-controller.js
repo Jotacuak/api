@@ -4,26 +4,7 @@ const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-    if (!req.body.name || !req.body.phoneNumber || !req.body.mobileNumber || !req.body.cifNumber || !req.body.openingDays || !req.body.customerServiceHours || !req.body.visible) {
-
-        res.status(400).send({
-            message: "Faltan campos por rellenar."
-        });
-
-        return;
-    }
-
-    const companyDetail = {
-        name: req.body.name,
-        phoneNumber: req.body.phoneNumber,
-        mobileNumber: req.body.mobileNumber,
-        cifNumber: req.body.cifNumber,
-        openingDays: req.body.openingDays,
-        customerServiceHours: req.body.customerServiceHours,
-        visible: req.body.visible ? req.body.visible : true
-    };
-
-    CompanyDetail.create(companyDetail).then(data => {
+    CompanyDetail.create(req.body).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({

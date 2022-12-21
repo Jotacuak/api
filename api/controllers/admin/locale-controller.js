@@ -1,10 +1,10 @@
 const db = require("../../models");
-const Product = db.Product;
+const Locale = db.Locale;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-    Product.create(req.body).then(data => {
+    Locale.create(req.body).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -17,21 +17,15 @@ exports.findAll = (req, res) => {
 
     let whereStatement = {};
 
-    if(req.query.name)
-        whereStatement.name = {[Op.substring]: req.query.name};
+    if(req.query.type)
+        whereStatement.type = {[Op.substring]: req.query.type};
         
-    if(req.query.price)
-        whereStatement.price = {[Op.substring]: req.query.price};
-
-    if(req.query.taxId)
-        whereStatement.taxId = {[Op.substring]: req.query.taxId};
-
-    if(req.query.featured)
-        whereStatement.featured = {[Op.substring]: req.query.featured};
+    if(req.query.valid)
+        whereStatement.valid = {[Op.substring]: req.query.valid};
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    Product.findAll({ where: condition }).then(data => {
+    Locale.findAll({ where: condition }).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -44,7 +38,7 @@ exports.findOne = (req, res) => {
 
     const id = req.params.id;
 
-    Product.findByPk(id).then(data => {
+    Locale.findByPk(id).then(data => {
 
         if (data) {
             res.status(200).send(data);
@@ -65,7 +59,7 @@ exports.update = (req, res) => {
 
     const id = req.params.id;
 
-    Product.update(req.body, {
+    Locale.update(req.body, {
         where: { id: id }
     }).then(num => {
         if (num == 1) {
@@ -88,7 +82,7 @@ exports.delete = (req, res) => {
 
     const id = req.params.id;
 
-    Product.destroy({
+    Locale.destroy({
         where: { id: id }
     }).then(num => {
         if (num == 1) {

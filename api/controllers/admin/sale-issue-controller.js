@@ -4,24 +4,7 @@ const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-    if (!req.body.payMethodId || !req.body.clientId || !req.body.cartId || !req.body.errorCode || !req.body.errorMessage) {
-
-        res.status(400).send({
-            message: "Faltan campos por rellenar."
-        });
-
-        return;
-    }
-
-    const saleIssue = {
-        payMethodId: req.body.payMethodId,
-        clientId: req.body.clientId,
-        cartId: req.body.cartId,
-        errorCode: req.body.errorCode,
-        errorMessage: req.body.errorMessage,
-    };
-
-    SaleIssue.create(saleIssue).then(data => {
+    SaleIssue.create(req.body).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
