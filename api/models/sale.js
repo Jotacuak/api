@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-    return sequelize.define('Sale', {
+    const Sale = sequelize.define('Sale', {
         id: {
             autoIncrement: true,
             type: DataTypes.INTEGER,
@@ -164,4 +164,14 @@ module.exports = function(sequelize, DataTypes) {
             },
         ]
     });
+
+    Sale.associate = function (models){
+        Sale.belongsTo(models.Cart, { as: "cart", foreignKey: "cartId"});
+        Sale.belongsTo(models.Client, { as: "client", foreignKey: "clientId"});
+        Sale.belongsTo(models.PayMethod, { as: "payMethod", foreignKey: "payMethodId"});
+        Sale.hasMany(models.Payback, { as: "paybacks", foreignKey: "saleId"});
+        Sale.hasMany(models.SaleDetail, { as: "sale_details", foreignKey: "saleId"});
+    };
+
+    return Sale;
 };

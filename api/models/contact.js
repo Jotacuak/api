@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-    return sequelize.define('Contact', {
+    const Contact = sequelize.define('Contact', {
         id: {
             autoIncrement: true,
             type: DataTypes.INTEGER,
@@ -121,4 +121,10 @@ module.exports = function(sequelize, DataTypes) {
             },
         ]
     });
+    
+    Contact.associate = function(models){
+        Contact.belongsTo(Fingerprint, { as: "fingerprint", foreignKey: "fingerprintId"});
+    };
+
+    return Contact;
 };

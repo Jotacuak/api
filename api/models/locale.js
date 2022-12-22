@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-    return sequelize.define('Locale', {
+    const Locale = sequelize.define('Locale', {
         id: {
             autoIncrement: true,
             type: DataTypes.INTEGER,
@@ -101,4 +101,8 @@ module.exports = function(sequelize, DataTypes) {
             },
         ]
     });
+
+    Locale.associate = function(models){};
+
+    return Locale;
 };

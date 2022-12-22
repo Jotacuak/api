@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-    return sequelize.define('ProductCategory', {
+    const ProductCategory = sequelize.define('ProductCategory', {
         id: {
             autoIncrement: true,
             type: DataTypes.INTEGER,
@@ -38,4 +38,10 @@ module.exports = function(sequelize, DataTypes) {
             },
         ]
     });
+
+    ProductCategory.associate = function(models){
+        ProductCategory.hasMany(models.Product, { as: "products", foreignKey: "categoryId"});
+    };
+
+    return ProductCategory;
 };

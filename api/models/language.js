@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-    return sequelize.define('Language', {
+    const Language = sequelize.define('Language', {
         id: {
             autoIncrement: true,
             type: DataTypes.INTEGER,
@@ -53,4 +53,8 @@ module.exports = function(sequelize, DataTypes) {
             },
         ]
     });
+
+    Language.associate = function(models){};
+
+    return Language;
 };

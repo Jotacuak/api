@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-    return sequelize.define('ImageConfig', {
+    const ImageConfig = sequelize.define('ImageConfig', {
         id: {
             autoIncrement: true,
             type: DataTypes.INTEGER,
@@ -159,4 +159,10 @@ module.exports = function(sequelize, DataTypes) {
             },
         ]
     });
+
+    ImageConfig.associate = function(models){
+        ImageConfig.hasMany(ImageResize, { as: "image_resizes", foreignKey: "imageConfigsId"});
+    };
+
+    return ImageConfig;
 };

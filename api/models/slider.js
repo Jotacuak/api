@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-    return sequelize.define('Slider', {
+    const Slider = sequelize.define('Slider', {
         id: {
             autoIncrement: true,
             type: DataTypes.INTEGER,
@@ -38,4 +38,8 @@ module.exports = function(sequelize, DataTypes) {
             },
         ]
     });
+
+    Slider.associate = function(models){};
+
+    return Slider;
 };

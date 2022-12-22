@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-    return sequelize.define('ImageResize', {
+    const ImageResize = sequelize.define('ImageResize', {
         id: {
             autoIncrement: true,
             type: DataTypes.INTEGER,
@@ -262,4 +262,11 @@ module.exports = function(sequelize, DataTypes) {
             },
         ]
     });
+
+    ImageResize.associate = function(models){
+        ImageResize.belongsTo(models.ImageConfig, { as: "imageConfig", foreignKey: "imageConfigsId"});
+        ImageResize.belongsTo(models.ImageOriginal, { as: "imageOriginal", foreignKey: "imageOriginalsId"});
+    };
+
+    return ImageResize;
 };
