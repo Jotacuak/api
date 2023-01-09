@@ -1,0 +1,46 @@
+<doctype html>
+    <html lang="es">
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="shortcut icon" href="https://www.youtube.com/s/desktop/12d6b690/img/favicon.ico">    
+            <title>Título</title>
+            <meta name="description" content="descripción de la web, se recomienda 90 caracteres">
+            <meta name="keywords" 	 content="palabras clave, separadas, por comas">
+            <link href="style/app.css" rel="stylesheet">
+        </head>
+        
+        <body>
+            <div class="faqs">
+                <div class="faqs-form">
+                    <form id="admin-faqs-form" method="POST" action="http://127.0.0.1:8080/api/admin/faqs">                             
+                        <div class="faqs-form-element">
+                            <label for="username">Nombre</label>
+                        </div>            
+                        <div class="faqs-form-element">
+                            <input id="name" type="name" class="form-control input-big email" value="" name="name">
+                        </div>            
+                        <div class="faqs-form-element">
+                            <label for="question">Pregunta</label>
+                        </div>            
+                        <div class="faqs-form-element">
+                            <input id="question" type="text" class="form-control input-big password" name="question">
+                        </div> 
+                        <div class="faqs-form-element">
+                            <label for="answer">Respuesta</label>
+                        </div>            
+                        <div class="faqs-form-element">
+                            <input id="answer" type="text" class="form-control input-big password" name="answer">
+                        </div>                 
+                        <div class="faqs-form-element">
+                            <button type="submit" id="store-button" class="admin-submit-button">
+                                Enviar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <script type="module" src="js/app.js"></script>
+        </body>
+    </html>

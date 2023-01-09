@@ -1,0 +1,35 @@
+.login {
+    align-content: center;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    width: 100%;
+}
+
+.login .login-form {
+    border: 0.2rem solid white;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    position: fixed;
+    top: 25vh;
+}
+
+.login .login-form .login-form-element {
+    align-content: center;
+    display: flex;
+    justify-content: center;
+    margin: 1rem auto;
+}
+
+.login .login-form .login-form-element svg{
+    height: 5rem;
+    width: 5rem;
+}
+
+.login .login-form .login-form-element button {
+    border-radius: 0.25rem;
+    cursor: pointer;
+    float: right;
+    margin-top: 0.5rem;
+    padding: 0.5rem 1rem;
+}
