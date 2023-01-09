@@ -15,9 +15,6 @@ module.exports = function(sequelize, DataTypes) {
                 key: 'id'
             },
             validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo venta ID."
-                },
                 isInt:{
                     msg: "Error en el campo venta ID. Debe ser un número entero."
                 }
@@ -31,9 +28,6 @@ module.exports = function(sequelize, DataTypes) {
                 key: 'id'
             },
             validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo producto ID."
-                },
                 isInt:{
                     msg: "Error en el campo producto ID. Debe ser un número entero."
                 }
@@ -89,14 +83,14 @@ module.exports = function(sequelize, DataTypes) {
         },
         taxType: {
             type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        validate: {
-            notNull:{
-                msg: "Debe rellenar el campo tipo de IVA."
-            },
-            isInt:{
-                msg: "Error en el campo tipo de IVA. Debe ser un número entero."
+            allowNull: false,       
+            validate: {
+                notNull:{
+                    msg: "Debe rellenar el campo tipo de IVA."
+                },
+                isInt:{
+                    msg: "Error en el campo tipo de IVA. Debe ser un número entero."
+                }
             }
         }
     }, {

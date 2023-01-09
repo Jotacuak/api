@@ -42,9 +42,6 @@ module.exports = function(sequelize, DataTypes) {
                 key: 'id'
             },
             validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo IVA ID."
-                },
                 isInt:{
                     msg: "Error en el campo IVA ID. Debe ser un número entero."
                 }
@@ -63,9 +60,6 @@ module.exports = function(sequelize, DataTypes) {
                 key: 'id'
             },
             validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo categoría ID."
-                },
                 isInt:{
                     msg: "Error en el campo categoría ID. Debe ser un número entero."
                 }

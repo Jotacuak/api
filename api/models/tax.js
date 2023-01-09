@@ -42,7 +42,7 @@ module.exports = function(sequelize, DataTypes) {
     });
 
     Tax.associate = function(models){
-        Tax.hasMany(Product, { as: "products", foreignKey: "taxId"});
+        Tax.hasMany(models.Product, { as: "products", foreignKey: "taxId"});
     };
 
     return Tax;

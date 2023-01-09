@@ -15,9 +15,6 @@ module.exports = function(sequelize, DataTypes) {
                 key: 'id'
             },
             validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo método de pago ID."
-                },
                 isInt:{
                     msg: "Error en el campo método de pago ID. Debe ser un número entero."
                 }
@@ -31,9 +28,6 @@ module.exports = function(sequelize, DataTypes) {
                 key: 'id'
             },
             validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo cliente ID."
-                },
                 isInt:{
                     msg: "Error en el campo cliente ID. Debe ser un número entero."
                 }
@@ -47,9 +41,6 @@ module.exports = function(sequelize, DataTypes) {
                 key: 'id'
             },
             validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo carrito ID."
-                },
                 isInt:{
                     msg: "Error en el campo carrito ID. Debe ser un número entero."
                 }

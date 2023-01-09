@@ -182,7 +182,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         sizeBytes: {
             type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: falsee,
+            allowNull: false,
             validate: {
                 notNull:{
                     msg: "Debe rellenar el campo tamaño archivo."

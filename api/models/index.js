@@ -1,9 +1,12 @@
 'use strict';
 
+const fs = require('fs');
 const dotenv = require('dotenv').config();
 const Sequelize = require('sequelize');
 const process = require('process');
-const initModels = require("./init-models"); 
+const path = require('path');
+const basename = path.basename(__filename);
+const db = {};
 
 const sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_USER, process.env.DATABASE_PASSWORD, {
     

@@ -161,7 +161,7 @@ module.exports = function(sequelize, DataTypes) {
     });
 
     ImageConfig.associate = function(models){
-        ImageConfig.hasMany(ImageResize, { as: "image_resizes", foreignKey: "imageConfigsId"});
+        ImageConfig.hasMany(models.ImageResize, { as: "image_resizes", foreignKey: "imageConfigsId"});
     };
 
     return ImageConfig;
