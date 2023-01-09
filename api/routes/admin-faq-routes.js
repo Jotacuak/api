@@ -2,7 +2,7 @@ module.exports = app => {
 
     const router = require("express").Router();
     const authJwt  = require("../middlewares/auth-jwt.js");
-    const controller = require("../controllers/admin/sale-controller.js");
+    const controller = require("../controllers/admin/faq-controller.js");
 
     router.post("/", [authJwt.verifyUserToken], controller.create);
     router.get("/", [authJwt.verifyUserToken], controller.findAll);  
@@ -10,5 +10,5 @@ module.exports = app => {
     router.put("/:id", [authJwt.verifyUserToken], controller.update);  
     router.delete("/:id", [authJwt.verifyUserToken], controller.delete);
   
-    app.use('/api/admin/sales', router);
+    app.use('/api/admin/faqs', router);
 };
