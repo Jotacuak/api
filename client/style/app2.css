@@ -1,0 +1,259 @@
+/*====================
+======= Parte estructural ======
+======================*/
+
+:root{
+    box-sizing: border-box;
+}
+
+body{
+    background-color: hsl(308, 100%, 80%);
+    display:flex; 
+    flex-direction:column;
+    margin: 1rem auto;
+    min-height: 100vh;
+    width: 90%;
+}
+
+header{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+main{
+    margin-top: 5%;
+}
+
+/*====================
+====== Columns ======
+======================*/
+
+.desktop-one-column .column{
+    margin-bottom: 5%;
+}
+
+.column{
+    width: 100%;
+}
+
+.desktop-two-column{
+    display: flex;
+}
+
+.desktop-three-column{
+    display: flex;
+}
+
+.desktop-three-column .column{
+    width: 30%;
+}
+
+.desktop-four-column{
+    display: flex;
+}
+
+.desktop-four-column .column{
+    width: 24%;
+}
+
+.desktop-two-column-aside{
+    display: flex;
+}
+
+.desktop-two-column-aside .column-main{
+    width: 65%;
+}
+
+.desktop-two-column-aside .column-aside{
+    width: 30;
+}
+
+.two-column-aside{
+    display: flex;
+}
+
+.two-column-aside .column-aside{
+    width: 20%;
+}
+
+.two-column-aside .column-main{
+    width: 80%;
+}
+
+.two-column{
+    display: flex;
+    justify-content: space-between;
+}
+
+.two-column .column{
+    width: 45%;
+}
+
+/*====================
+====== Tipografía ======
+======================*/
+
+
+h1, h2, h3, h4, h5, h6, a, p, label{
+    color: hsl(180, 5%, 25%);
+}
+
+h1, h2, h3, h4 {
+    font-family: "Ubuntu";
+}
+
+h5, h6, form, option{
+    font-family: "Ubuntu Condensed";
+}
+
+a, td, p, button, label, input{
+    font-family: "Ubuntu";
+}
+
+h1 {
+    font-size: 2.5em;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+h2{
+    font-size: 2em;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+h3{
+    font-size: 1.7rem;
+    font-weight: 400;
+    text-decoration: none;
+}
+
+h4{
+    font-weight: 600;
+    text-decoration: none;
+}
+
+a {
+    -webkit-transition: 300ms;
+    -moz-transition: 300ms;
+    -o-transition: 300ms;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 300ms;
+}
+
+a:focus, a:hover {
+    outline: none;
+    outline-offset: 0;
+    text-decoration: none;
+}
+
+/*====================
+======== Imagenes =========
+======================*/
+
+img{
+    max-width: 100%;
+}
+
+/*====================
+======== Specials =========
+======================*/
+.red{
+    margin-bottom: .5rem;
+}
+
+.red p{
+    color: hsl(0, 100%, 50%);
+}
+
+.orange p{
+    color: hsl(0, 100%, 50%);
+    font-size: 1.5rem ;
+}
+
+.italic p{
+    font-style: italic;
+    font-weight: 300;
+}
+
+.pink-button{
+    background-color: hsl(293, 51%, 37%);
+    border: .2rem transparent;
+    border-radius: .25rem;
+    box-shadow: 0 .5rem 1rem 0 rgba(0,0,0,0.2), 0 .5rem 1rem 0 rgba(0,0,0,0.19);
+    color: hsl(308, 100%, 80%);
+    cursor: pointer;
+    transition: all 150ms ease-in-out;
+}
+
+.pink-button:hover{
+    background-color: transparent;
+    box-shadow: 0 0 .2rem 0 hsl(293, 51%, 37%), 0 0 .2rem .1rem hsl(293, 51%, 37%);
+    color: hsl(293, 51%, 37%);
+}
+
+/*====================
+======== Header =========
+======================*/
+
+.logo-title{
+    display: flex;
+    margin: auto 0;
+}
+
+.logo{
+    width: max-content;
+}
+
+.logo svg{
+    height: 3rem;
+    width: 3rem;
+}
+
+.logo svg path{
+    fill: hsl(180, 5%, 25%);
+}
+
+.title{
+    margin-left: 1em;
+}
+
+.title h1{
+    text-align: left;
+}
+
+
+/*====================
+======== Contact =========
+======================*/
+
+.contact-title{
+    text-align: center;
+}
+
+.contact-us-option{
+    display: flex;
+    flex-direction: row;
+}
+
+.contact-us-option-icon{
+    margin-top: .5rem;
+    margin-right: .5rem;
+}
+
+.contact-us-option-icon svg {
+    height: 2rem;
+    width: 2rem;
+}
+
+.contact-us-option-icon svg path{
+    fill: hsl(180, 5%, 25%);
+}
+
+.contact-form-element-input textarea{
+    height: 15vh;
+    resize: none;
+    width: 84%;
+}

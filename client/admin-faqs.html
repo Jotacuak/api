@@ -4,16 +4,106 @@
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <link rel="shortcut icon" href="https://www.youtube.com/s/desktop/12d6b690/img/favicon.ico">    
-            <title>Título</title>
+            <title>Faqs admin panel</title>
             <meta name="description" content="descripción de la web, se recomienda 90 caracteres">
             <meta name="keywords" 	 content="palabras clave, separadas, por comas">
             <link href="style/app.css" rel="stylesheet">
         </head>
-        
+        <header>
+            <div class="main-title">
+                <h1>FAQS ADMIN PANEL</h1>
+            </div>
+        </header>
         <body>
-            <div class="faqs">
-                <div class="faqs-form">
-                    <form id="admin-faqs-form" method="POST" action="http://127.0.0.1:8080/api/admin/faqs">                             
+            <div class="faqs desktop-two-columns">
+                <div class="faqs-table column">
+                    <div class="faqs-table-element">
+                        <div class="faqs-table-element-texts">
+                            <div class="faqs-table-element-text">
+                                <h5>Name: Uno</h5>
+                            </div>
+                            <div class="faqs-table-element-text"></div>
+                        </div>
+                        <div class="faqs-table-element-buttons">
+                            <form id="admin-form" method="PUT" action="http://127.0.0.1:8080/api/admin/faqs">
+                                <div class="faqs-table-element-button">
+                                    <button type="submit" id="edit-button" class="table-button">
+                                        <svg viewBox="0 0 24 24">
+                                            <path fill="currentColor" d="M20 2H4C2.89 2 2 2.89 2 4V16C2 17.11 2.9 18 4 18H8V21C8 21.55 8.45 22 9 22H9.5C9.75 22 10 21.9 10.2 21.71L13.9 18H20C21.1 18 22 17.1 22 16V4C22 2.89 21.1 2 20 2M9.08 15H7V12.91L13.17 6.72L15.24 8.8L9.08 15M16.84 7.2L15.83 8.21L13.76 6.18L14.77 5.16C14.97 4.95 15.31 4.94 15.55 5.16L16.84 6.41C17.05 6.62 17.06 6.96 16.84 7.2Z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </form>
+                            <form id="admin-form" method="DELETE" action="http://127.0.0.1:8080/api/admin/faqs">
+                                <div class="faqs-table-element-button">
+                                    <button type="submit" id="delete-button" class="table-button">
+                                        <svg viewBox="0 0 24 24">
+                                            <path fill="currentColor" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M9,8H11V17H9V8M13,8H15V17H13V8Z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="faqs-table-element">
+                        <div class="faqs-table-element-texts">
+                            <div class="faqs-table-element-text">
+                                <h5>Name: Uno</h5>
+                            </div>
+                            <div class="faqs-table-element-text"></div>
+                        </div>
+                        <div class="faqs-table-element-buttons">
+                            <form id="admin-form" method="PUT" action="http://127.0.0.1:8080/api/admin/faqs">
+                                <div class="faqs-table-element-button">
+                                    <button type="submit" id="edit-button" class="table-button">
+                                        <svg viewBox="0 0 24 24">
+                                            <path fill="currentColor" d="M20 2H4C2.89 2 2 2.89 2 4V16C2 17.11 2.9 18 4 18H8V21C8 21.55 8.45 22 9 22H9.5C9.75 22 10 21.9 10.2 21.71L13.9 18H20C21.1 18 22 17.1 22 16V4C22 2.89 21.1 2 20 2M9.08 15H7V12.91L13.17 6.72L15.24 8.8L9.08 15M16.84 7.2L15.83 8.21L13.76 6.18L14.77 5.16C14.97 4.95 15.31 4.94 15.55 5.16L16.84 6.41C17.05 6.62 17.06 6.96 16.84 7.2Z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </form>
+                            <form id="admin-form" method="DELETE" action="http://127.0.0.1:8080/api/admin/faqs">
+                                <div class="faqs-table-element-button">
+                                    <button type="submit" id="delete-button" class="table-button">
+                                        <svg viewBox="0 0 24 24">
+                                            <path fill="currentColor" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M9,8H11V17H9V8M13,8H15V17H13V8Z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="faqs-table-element">
+                        <div class="faqs-table-element-texts">
+                            <div class="faqs-table-element-text">
+                                <h5>Name: Uno</h5>
+                            </div>
+                            <div class="faqs-table-element-text"></div>
+                        </div>
+                        <div class="faqs-table-element-buttons">
+                            <form id="admin-form" method="PUT" action="http://127.0.0.1:8080/api/admin/faqs">
+                                <div class="faqs-table-element-button">
+                                    <button type="submit" id="edit-button" class="table-button">
+                                        <svg viewBox="0 0 24 24">
+                                            <path fill="currentColor" d="M20 2H4C2.89 2 2 2.89 2 4V16C2 17.11 2.9 18 4 18H8V21C8 21.55 8.45 22 9 22H9.5C9.75 22 10 21.9 10.2 21.71L13.9 18H20C21.1 18 22 17.1 22 16V4C22 2.89 21.1 2 20 2M9.08 15H7V12.91L13.17 6.72L15.24 8.8L9.08 15M16.84 7.2L15.83 8.21L13.76 6.18L14.77 5.16C14.97 4.95 15.31 4.94 15.55 5.16L16.84 6.41C17.05 6.62 17.06 6.96 16.84 7.2Z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </form>
+                            <form id="admin-form" method="DELETE" action="http://127.0.0.1:8080/api/admin/faqs">
+                                <div class="faqs-table-element-button">
+                                    <button type="submit" id="delete-button" class="table-button">
+                                        <svg viewBox="0 0 24 24">
+                                            <path fill="currentColor" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M9,8H11V17H9V8M13,8H15V17H13V8Z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="faqs-form column">
+                    <form id="admin-form" method="POST" action="http://127.0.0.1:8080/api/admin/faqs">                             
                         <div class="faqs-form-element">
                             <label for="username">Nombre</label>
                         </div>            
@@ -30,7 +120,7 @@
                             <label for="answer">Respuesta</label>
                         </div>            
                         <div class="faqs-form-element">
-                            <input id="answer" type="text" class="form-control input-big password" name="answer">
+                            <textarea id="answer" type="text" class="form-control input-big password" name="answer"></textarea>
                         </div>                 
                         <div class="faqs-form-element">
                             <button type="submit" id="store-button" class="admin-submit-button">
@@ -42,5 +132,19 @@
             </div>
 
             <script type="module" src="js/app.js"></script>
+            <script>
+                WebFontConfig = {
+                    google: {
+                        families: ['Marcellus SC']
+                    }
+                };  
+                
+                (function(d) {
+                    var wf = d.createElement('script'), s = d.scripts[0];
+                    wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js';
+                    wf.async = true;
+                    s.parentNode.insertBefore(wf, s);
+                })(document);
+            </script>
         </body>
     </html>

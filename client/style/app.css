@@ -1,3 +1,23 @@
+body{
+    font-family: 'Marcellus SC';
+}
+
+.main-title{
+    background-color: hsl(288, 69%, 87%);
+    height: 4vh;
+    text-align: center;
+    width: 100%;
+}
+
+.desktop-two-columns{
+    display: flex;
+    justify-content: space-around;
+}
+
+.desktop-two-columns .column{
+    width: 45%;
+}
+
 .login {
     align-content: center;
     display: flex;
@@ -32,4 +52,72 @@
     float: right;
     margin-top: 0.5rem;
     padding: 0.5rem 1rem;
+}
+
+.admin-submit-button{
+    background-color: hsl(288, 69%, 87%);
+    border: .1rem solid black;
+    border-radius: .25rem;
+    cursor: pointer;
+    font-family: 'Marcellus SC';
+    font-weight: 800;
+    margin-top: 1rem;
+    padding: .5rem 1rem;
+    width: 100%;
+}
+
+.faqs{
+    margin-top: 2rem;
+    width: 90%;
+}
+
+.faqs-table-element{
+    border: .1rem solid black;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 1rem auto;
+}
+
+.faqs-table-element-texts{
+    margin-left: 1rem;
+}
+
+.faqs-table-element-buttons{
+    display: flex;
+    flex-direction: row;
+    margin-top: .8rem
+}
+
+.faqs-form-element input,textarea{
+    height: 2rem;
+    width: 100%;
+}
+
+.faqs-form-element textarea{
+    height: 15vh;
+    resize: none;
+}
+
+.faqs-table-element-button .table-button{
+    background: none;
+    border: none;
+}
+
+.faqs-table-element-button .table-button svg{
+    height: 2rem;
+    width: 2rem;
+}
+
+.faqs-table-element-button .table-button svg path{
+    fill: hsl(288, 69%, 87%);
+}
+
+.faqs-form-element{
+    margin: .5rem 0;
+}
+
+.contact-us-option-icon svg {
+    height: 2rem;
+    width: 2rem;
 }

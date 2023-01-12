@@ -1,51 +1,32 @@
 const EmailService = require("../../services/email-service");
 const db = require("../../models");
-const Contact = db.Contact;
+const Email = db.Email;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-    Contact.create(req.body).then(data => {
-
+    Email.create(req.body).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Algún error ha surgido al insertar el dato."
         });
     });
-
-    let email = {
-        subject: "Nuevo email de contacto",
-        content: `Ha llegado un contacto nuevo a la web con la siguiente información:<br/>
-                    <b>Nombre:</b> ${req.body.name}<br/>
-                    <b>Apellidos:</b> ${req.body.surname}<br/>
-                    <b>Teléfono:</b> ${req.body.telephone}<br/>
-                    <b>Email:</b> ${req.body.email}<br/>
-                    <b>Mensaje:</b> ${req.body.message}`
-    };
-    
-    new EmailService('gmail').sendEmail(email);
 };
 
 exports.findAll = (req, res) => {
 
     let whereStatement = {};
 
-    if(req.query.name)
-        whereStatement.name = {[Op.substring]: req.query.name};
+    if(req.query.contactId)
+        whereStatement.contactId = {[Op.substring]: req.query.contactId};
         
-    if(req.query.surname)
-        whereStatement.surname = {[Op.substring]: req.query.surname};
-
-    if(req.query.telephone)
-        whereStatement.telephone = {[Op.substring]: req.query.telephone};
-        
-    if(req.query.email)
-        whereStatement.email = {[Op.substring]: req.query.email};
+    if(req.query.message)
+        whereStatement.message = {[Op.substring]: req.query.message};
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    Contact.findAll({ where: condition }).then(data => {
+    Email.findAll({ where: condition }).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -58,7 +39,7 @@ exports.findOne = (req, res) => {
 
     const id = req.params.id;
 
-    Contact.findByPk(id).then(data => {
+    Email.findByPk(id).then(data => {
 
         if (data) {
             res.status(200).send(data);
@@ -79,7 +60,7 @@ exports.update = (req, res) => {
 
     const id = req.params.id;
 
-    Contact.update(req.body, {
+    Email.update(req.body, {
         where: { id: id }
     }).then(num => {
         if (num == 1) {
@@ -102,7 +83,7 @@ exports.delete = (req, res) => {
 
     const id = req.params.id;
 
-    Contact.destroy({
+    Email.destroy({
         where: { id: id }
     }).then(num => {
         if (num == 1) {

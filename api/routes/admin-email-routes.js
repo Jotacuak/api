@@ -2,13 +2,13 @@ module.exports = app => {
 
     const router = require("express").Router();
     const authJwt  = require("../middlewares/auth-jwt.js");
-    const controller = require("../controllers/admin/contact-controller.js");
+    const controller = require("../controllers/admin/email-controller.js");
 
-    router.post("/", controller.create);
+    router.post("/", [authJwt.verifyUserToken], controller.create);
     router.get("/", [authJwt.verifyUserToken], controller.findAll);  
     router.get("/:id", [authJwt.verifyUserToken], controller.findOne);  
     router.put("/:id", [authJwt.verifyUserToken], controller.update);  
     router.delete("/:id", [authJwt.verifyUserToken], controller.delete);
-  
-    app.use('/api/admin/contacts', router);
+
+    app.use('/api/admin/emails', router);
 };

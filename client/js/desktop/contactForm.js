@@ -1,14 +1,14 @@
-export let form = () => {
+export let contactForm = () => {
 
-    let storeButton = document.getElementById('store-button');
+    let contactButton = document.getElementById('contact-button');
 
-    if (storeButton){
+    if (contactButton){
 
-        storeButton.addEventListener("click", (event) =>{
+        contactButton.addEventListener("click", (event) =>{
 
             event.preventDefault();
 
-            let form = document.getElementById('admin-form');
+            let form = document.getElementById('contact-form');
             let formData = new FormData(form);
             let formDataJson = Object.fromEntries(formData.entries());
             let url = form.action;
@@ -16,7 +16,6 @@ export let form = () => {
             fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken'),
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formDataJson)
@@ -31,7 +30,7 @@ export let form = () => {
             .catch(error => {
 
                 console.log(error);
-            
+                
             });
 
         })

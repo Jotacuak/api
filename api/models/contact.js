@@ -76,9 +76,6 @@ module.exports = function(sequelize, DataTypes) {
                 },
                 notEmpty:{
                     msg: "El campo mensaje no puede estar vacio."
-                },
-                isAlphaumeric:{
-                    msg: "Error en el mensaje. Solo puede contener caracteres alfanuméricos."
                 }
             }
         },
@@ -123,6 +120,7 @@ module.exports = function(sequelize, DataTypes) {
     });
     
     Contact.associate = function(models){
+        Contact.hasMany(models.Email, { as: "emails", foreignKey: "contactId"});
         Contact.belongsTo(models.Fingerprint, { as: "fingerprint", foreignKey: "fingerprintId"});
     };
 
