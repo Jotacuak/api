@@ -4,7 +4,7 @@ module.exports = app => {
     const authJwt  = require("../middlewares/auth-jwt.js");
     const controller = require("../controllers/admin/email-controller.js");
 
-    router.post("/", [authJwt.verifyUserToken], controller.create);
+    router.post("/", controller.create);
     router.get("/", [authJwt.verifyUserToken], controller.findAll);  
     router.get("/:id", [authJwt.verifyUserToken], controller.findOne);  
     router.put("/:id", [authJwt.verifyUserToken], controller.update);  

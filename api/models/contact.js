@@ -120,7 +120,6 @@ module.exports = function(sequelize, DataTypes) {
     });
     
     Contact.associate = function(models){
-        Contact.hasMany(models.Email, { as: "emails", foreignKey: "contactId"});
         Contact.belongsTo(models.Fingerprint, { as: "fingerprint", foreignKey: "fingerprintId"});
     };
 

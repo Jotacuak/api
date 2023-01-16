@@ -7,19 +7,15 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false,
             primaryKey: true
         },
-        contactId: {
-            type: DataTypes.INTEGER,
+        addressee: {
+            type: DataTypes.STRING(255),
             allowNull: false,
-            references: {
-                model: 'contacts',
-                key: 'id'
-            },
             validate: {
-                notEmpty:{
-                    msg: "Debe rellenar el campo huella ID."
+                notNull:{
+                    msg: "Debe rellenar el campo mensaje."
                 },
-                isInt:{
-                    msg: "Error en el campo huella ID. Debe ser un número entero"
+                notEmpty:{
+                    msg: "El campo mensaje no puede estar vacio."
                 }
             }
         },
@@ -32,9 +28,6 @@ module.exports = function(sequelize, DataTypes) {
                 },
                 notEmpty:{
                     msg: "El campo mensaje no puede estar vacio."
-                },
-                isAlphaumeric:{
-                    msg: "Error en el mensaje. Solo puede contener caracteres alfanuméricos."
                 }
             }
         },
@@ -52,18 +45,10 @@ module.exports = function(sequelize, DataTypes) {
                     { name: "id" },
                 ]
             },
-            {
-                name: "contactId",
-                using: "BTREE",
-                fields: [
-                    { name: "contactId" },
-                ]
-            },
         ]
     });
     
     Email.associate = function(models){
-        Email.belongsTo(models.Contact, { as: "contacts", foreignKey: "contactId"});
     };
 
     return Email;

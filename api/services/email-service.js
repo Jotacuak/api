@@ -5,8 +5,6 @@ const dotenv = require('dotenv').config();
 const process = require('process');
 const db = require("../models");
 const Email = db.Email;
-const Op = db.Sequelize.Op;
-const Contact = db.Contact;
 
 module.exports = class EmailService {
 
@@ -76,29 +74,26 @@ module.exports = class EmailService {
             html: email.content
         }
 
-        this.transport.sendMail(mailOptions, function (err, result) {
+        this.transport.sendMail(mailOptions, function (err, res) {
+
             if (err) {
                 console.log(err);
-            } else {
+            } else{
 
-                const mailRecord = {
-                    addressee: mailOptions.destination,
-                    message: mailOptions.html
-                }
-
-                console.log(mailRecord);
+                let emailData = {};
+                emailData.addressee = mailOptions.to;
+                emailData.message = mailOptions.html;
+                
                // Aquí podríamos registrar en una base de datos los correos enviados
 
-            //    exports.create = (mailOptions.html, res) => {
+                Email.create(emailData).then(data => {
+                    res.status(200).send(data);
+                }).catch(err => {
+                    res.status(500).send({
+                        message: err.message || "Algún error ha surgido al insertar el dato."
+                    });
+                });
 
-            //         Email.create(req.body).then(data => {
-            //             res.status(200).send(data);
-            //         }).catch(err => {
-            //             res.status(500).send({
-            //                 message: err.message || "Algún error ha surgido al insertar el dato."
-            //             });
-            //         });
-            //     };
             }
         });
     }

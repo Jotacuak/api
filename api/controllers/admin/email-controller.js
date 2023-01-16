@@ -1,4 +1,3 @@
-const EmailService = require("../../services/email-service");
 const db = require("../../models");
 const Email = db.Email;
 const Op = db.Sequelize.Op;
