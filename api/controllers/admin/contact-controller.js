@@ -7,24 +7,27 @@ exports.create = (req, res) => {
 
     Contact.create(req.body).then(data => {
 
+        let email = {
+            subject: "Nuevo email de contacto",
+            content: `Ha llegado un contacto nuevo a la web con la siguiente información:<br/>
+                        <b>Nombre:</b> ${req.body.name}<br/>
+                        <b>Apellidos:</b> ${req.body.surname}<br/>
+                        <b>Teléfono:</b> ${req.body.telephone}<br/>
+                        <b>Email:</b> ${req.body.email}<br/>
+                        <b>Mensaje:</b> ${req.body.message}`
+        };
+        
+        new EmailService('gmail').sendEmail(email);
+
         res.status(200).send(data);
+        
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Algún error ha surgido al insertar el dato."
         });
     });
 
-    let email = {
-        subject: "Nuevo email de contacto",
-        content: `Ha llegado un contacto nuevo a la web con la siguiente información:<br/>
-                    <b>Nombre:</b> ${req.body.name}<br/>
-                    <b>Apellidos:</b> ${req.body.surname}<br/>
-                    <b>Teléfono:</b> ${req.body.telephone}<br/>
-                    <b>Email:</b> ${req.body.email}<br/>
-                    <b>Mensaje:</b> ${req.body.message}`
-    };
-    
-    new EmailService('gmail').sendEmail(email);
+   
 };
 
 exports.findAll = (req, res) => {

@@ -86,14 +86,9 @@ module.exports = class EmailService {
                 
                // Aquí podríamos registrar en una base de datos los correos enviados
 
-                Email.create(emailData).then(data => {
-                    res.status(200).send(data);
-                }).catch(err => {
-                    res.status(500).send({
-                        message: err.message || "Algún error ha surgido al insertar el dato."
-                    });
+                Email.create(emailData).catch(err => {
+                    console.log(err);
                 });
-
             }
         });
     }

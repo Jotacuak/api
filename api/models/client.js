@@ -91,9 +91,6 @@ module.exports = function(sequelize, DataTypes) {
                 },
                 notEmpty:{
                     msg: "El campo dirección no puede estar vacio."
-                },
-                isAlphaumeric:{
-                    msg: "Error en el campo dirección. Solo puede contener caracteres alfanuméricos."
                 }
             }
         }
