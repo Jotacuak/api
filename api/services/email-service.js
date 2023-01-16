@@ -4,6 +4,7 @@ const OAuth2 = google.auth.OAuth2;
 const dotenv = require('dotenv').config();
 const process = require('process');
 const db = require("../models");
+const { ideahub } = require('googleapis/build/src/apis/ideahub');
 const Email = db.Email;
 
 module.exports = class EmailService {

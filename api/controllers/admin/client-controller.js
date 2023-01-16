@@ -12,6 +12,7 @@ exports.create = (req, res) => {
             content: `Ha llegado un contacto nuevo a la web con la siguiente información:<br/>
                         <b>Nombre:</b> ${req.body.name}<br/>
                         <b>Teléfono:</b> ${req.body.telephone}<br/>
+                        <b>Email:</b> ${req.body.email}<br/>
                         <b>Poblacion:</b> ${req.body.township}<br/>
                         <b>Codigo Postal:</b> ${req.body.postalCode}<br/>
                         <b>Dirección:</b> ${req.body.address}`
