@@ -66,7 +66,8 @@ module.exports = function(sequelize, DataTypes) {
                 customValidator(value) {
                     return emailValidator.validate(value).then((data) => {
                         if(data.valid == false){
-                            throw new Error("Tu email no parece valido");
+                            throw new Error("Email incorrecto, no se permiten emails temporales");
+                            
                         }
                     })
                 }

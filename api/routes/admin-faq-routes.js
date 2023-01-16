@@ -1,4 +1,4 @@
-module.exports = app => {
+module.exports = (app, upload) => {
 
     const router = require("express").Router();
     const authJwt  = require("../middlewares/auth-jwt.js");

@@ -49,9 +49,10 @@ module.exports = function(sequelize, DataTypes) {
                     msg: "El campo email no puede estar vacio."
                 },
                 customValidator(value) {
-                    emailValidator.validate(value).then((data) => {
+                    return emailValidator.validate(value).then((data) => {
                         if(data.valid == false){
-                            throw new Error("Tu email no parece valido");
+                            throw new Error("Email incorrecto, no se permiten emails temporales");
+                            
                         }
                     })
                 }
