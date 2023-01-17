@@ -1,29 +1,21 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-    const ImageOriginal = sequelize.define('ImageOriginal', {
+    const ImageConfiguration = sequelize.define('ImageConfiguration', {
         id: {
             autoIncrement: true,
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true
         },
-        path: {
-            type: DataTypes.STRING(255),
-            allowNull: false
-        },
         entity: {
             type: DataTypes.STRING(255),
             allowNull: false
         },
-        entityId: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        languageAlias: {
+        directory: {
             type: DataTypes.STRING(255),
             allowNull: false
         },
-        filename: {
+        type: {
             type: DataTypes.STRING(255),
             allowNull: false
         },
@@ -31,12 +23,16 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING(255),
             allowNull: false
         },
-        mimeType: {
+        grid: {
             type: DataTypes.STRING(255),
             allowNull: false
         },
-        sizeBytes: {
-            type: DataTypes.INTEGER,
+        contentAccepted: {
+            type: DataTypes.STRING(255),
+            allowNull: false
+        },
+        extensionConversion: {
+            type: DataTypes.STRING(255),
             allowNull: false
         },
         widthPx: {
@@ -44,6 +40,10 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false
         },
         heightPx: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        quality: {
             type: DataTypes.INTEGER,
             allowNull: false
         },
@@ -72,13 +72,13 @@ module.exports = function(sequelize, DataTypes) {
                 fields: [
                     { name: "id" },
                 ]
-            }     
+            }
         ]
     });
 
-    ImageOriginal.associate = function(models) {
-        ImageOriginal.hasMany(models.ImageOriginal, { as: 'imageOriginals', foreignKey: 'imageOriginalId'});
+    ImageConfiguration.associate = function(models) {
+        ImageConfiguration.hasMany(models.ImageResize, { as: 'imageResizes', foreignKey: 'imageConfigurationId'});
     };
 
-    return ImageOriginal;
+    return ImageConfiguration;
 };

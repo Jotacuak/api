@@ -7,234 +7,85 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false,
             primaryKey: true
         },
-        imageOriginalsId: {
+        imageConfigurationId: {
             type: DataTypes.INTEGER,
-            allowNull: true,
-            references: {
-                model: 'image_originals',
-                key: 'id'
-            },
-            validate: {
-                notEmpty:{
-                    msg: "Debe rellenar el campo imagen original ID."
-                },
-                isInt:{
-                    msg: "Error en el campo imagen original ID. Debe ser un número entero"
-                }
-            }
+            allowNull: false
         },
-        imageConfigsId: {
+        imageOriginalId: {
             type: DataTypes.INTEGER,
-            allowNull: true,
-            references: {
-                model: 'image_configs',
-                key: 'id'
-            },
-            validate: {
-                notEmpty:{
-                    msg: "Debe rellenar el campo huella ID."
-                },
-                isInt:{
-                    msg: "Error en el campo huella ID. Debe ser un número entero"
-                }
-            }
+            allowNull: false
         },
         title: {
-            type: DataTypes.STRING(150),
-            allowNull: false,
-            validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo título."
-                },
-                notEmpty:{
-                    msg: "El campo título no puede estar vacio."
-                },
-                isAlpha:{
-                    msg: "Error en el campo título. Solo puede contener ser letras."
-                }
-            }
+            type: DataTypes.STRING(255),
+            allowNull: false
         },
         alt: {
             type: DataTypes.STRING(255),
-            allowNull: false,
-            validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo alt."
-                },
-                notEmpty:{
-                    msg: "El campo alt no puede estar vacio."
-                },
-                isAlpha:{
-                    msg: "Error en el campo alt. Solo puede contener ser letras."
-                }
-            }
+            allowNull: false
         },
         path: {
             type: DataTypes.STRING(255),
-            allowNull: false,
-            validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo entidad."
-                },
-                notEmpty:{
-                    msg: "El campo path no puede estar vacio."
-                }
-            }
+            allowNull: false
         },
         entity: {
             type: DataTypes.STRING(255),
-            allowNull: false,
-            validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo entidad."
-                },
-                notEmpty:{
-                    msg: "El campo entidad no puede estar vacio."
-                },
-                isAlpha:{
-                    msg: "Error en el campo entidad. Solo puede contener letras."
-                }
-            }
+            allowNull: false
         },
         entityId: {
             type: DataTypes.INTEGER,
-            allowNull: false,
-            validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo entidad ID."
-                },
-                isInt:{
-                    msg: "Error en el campo entidad ID. Solo puede contener un número entero."
-                }
-            }
+            allowNull: false
         },
         languageAlias: {
-            type: DataTypes.STRING(2),
-            allowNull: false,
-            validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo lenguaje alias."
-                },
-                notEmpty:{
-                    msg: "El campo lenguaje alias no puede estar vacio."
-                },
-                isAlpha:{
-                    msg: "Error en el campo lenguaje alias. Solo puede contener letras."
-                },
-                isUppercase:{
-                    msg: "Error en el campo lenguaje alias. Debe ser en mayúsculas"
-                }
-            }
+            type: DataTypes.STRING(255),
+            allowNull: false
         },
         filename: {
             type: DataTypes.STRING(255),
-            allowNull: false,
-            validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo nombre del archivo."
-                },
-                notEmpty:{
-                    msg: "El campo nombre del archivo no puede estar vacio."
-                },
-                isAlpha:{
-                    msg: "Error en el campo nombre del archivo. Solo puede contener ser letras."
-                }
-            }
+            allowNull: false
         },
         content: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
-            validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo contenido."
-                },
-                notEmpty:{
-                    msg: "El campo contenido no puede estar vacio"
-                },
-            }
+            type: DataTypes.TEXT,
+            allowNull: false
         },
         mimeType: {
             type: DataTypes.STRING(255),
-            allowNull: false,
-            validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo formato de archivo."
-                },
-                notEmpty:{
-                    msg: "El campo formato de archivo no puede estar vacio."
-                },
-            }
+            allowNull: false
         },
         grid: {
             type: DataTypes.STRING(255),
-            allowNull: false,
-            validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo grid."
-                },
-                notEmpty:{
-                    msg: "Debe rellenar el campo grid."
-                },
-                isAlphanumeric:{
-                    msg: "Error en el campo grid. Solo puede contener carácteres alfanuméricos."
-                }
-            }
+            allowNull: false
         },
         sizeBytes: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: false,
-            validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo tamaño archivo."
-                },
-                isInt:{
-                    msg: "Error en el campo tamaño archivo. Solo puede contener un número entero."
-                }
-            }
+            type: DataTypes.INTEGER,
+            allowNull: false
         },
         widthPx: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: false,
-            validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo ancho px."
-                },
-                isInt:{
-                    msg: "Error en el campo ancho px. Solo puede contener un número entero."
-                }
-            }
+            type: DataTypes.INTEGER,
+            allowNull: false
         },
-        heighPx: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: false,
-            validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo alto px."
-                },
-                isNumeric:{
-                    msg: "Error en el campo alto px. Solo puede contener un número entero."
-                }
-            }
+        heightPx: {
+            type: DataTypes.INTEGER,
+            allowNull: false
         },
         quality: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: false,
-            validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo calidad."
-                },
-                isInt:{
-                    msg: "Error en el campo calidad. Solo puede contener un número entero."
-                },
-                len:{
-                    args: [[1, 100]],
-                    msng: "Error en el campo calidad. Debe contener un número entre 1 y 100"
-                }
-            }
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            allowNull: false
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            allowNull: false
+        },
+        deletedAt: {
+            type: DataTypes.DATE,
+            allowNull: true
         }
     }, {
         sequelize,
-        tableName: 'image_resizes',
+        tableName: 'image_configurations',
         timestamps: true,
         paranoid: true,
         indexes: [
@@ -247,25 +98,25 @@ module.exports = function(sequelize, DataTypes) {
                 ]
             },
             {
-                name: "imageOriginalsId",
+                name: "FK_image_resizes_image_configurations",
                 using: "BTREE",
                 fields: [
-                    { name: "imageOriginalsId" },
+                    { name: "imageConfigurationId" },
                 ]
             },
             {
-                name: "imageConfigsId",
+                name: "FK_image_resizes_image_originals",
                 using: "BTREE",
                 fields: [
-                    { name: "imageConfigsId" },
+                    { name: "imageOriginalId" },
                 ]
             },
         ]
     });
 
-    ImageResize.associate = function(models){
-        ImageResize.belongsTo(models.ImageConfig, { as: "imageConfig", foreignKey: "imageConfigsId"});
-        ImageResize.belongsTo(models.ImageOriginal, { as: "imageOriginal", foreignKey: "imageOriginalsId"});
+    ImageResize.associate = function(models) {
+        ImageResize.belongsTo(models.ImageConfiguration, { foreignKey: 'imageConfigurationId' });
+        ImageResize.belongsTo(models.ImageOriginal, { foreignKey: 'imageOriginalId' });
     };
 
     return ImageResize;

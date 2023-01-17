@@ -3,7 +3,6 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-   
     await queryInterface.createTable('image_resizes', {
       id: {
         allowNull: false,
@@ -11,27 +10,17 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      imageOriginalsId: { 
-        type: Sequelize.INTEGER, 
-        references: { 
-              model: 'image_originals', 
-              key: 'id' 
-        }, 
-        onUpdate: 'CASCADE', 
-        onDelete: 'SET NULL' 
+      imageConfigurationId: {
+        allowNull: false,
+        type: Sequelize.INTEGER
       },
-      imageConfigsId: { 
-      type: Sequelize.INTEGER, 
-      references: { 
-            model: 'image_configs', 
-            key: 'id' 
-      }, 
-      onUpdate: 'CASCADE', 
-      onDelete: 'SET NULL' 
+      imageOriginalId: {
+        allowNull: false,
+        type: Sequelize.INTEGER
       },
       title: {
         allowNull: false,
-        type: Sequelize.STRING(150)
+        type: Sequelize.STRING
       },
       alt: {
         allowNull: false,
@@ -51,7 +40,7 @@ module.exports = {
       },
       languageAlias: {
         allowNull: false,
-        type: Sequelize.STRING(2)
+        type: Sequelize.STRING
       },
       filename: {
         allowNull: false,
@@ -71,19 +60,19 @@ module.exports = {
       },
       sizeBytes: {
         allowNull: false,
-        type: Sequelize.INTEGER.UNSIGNED
+        type: Sequelize.INTEGER
       },
       widthPx: {
         allowNull: false,
-        type: Sequelize.INTEGER.UNSIGNED
+        type: Sequelize.INTEGER
       },
-      heighPx: {
+      heightPx: {
         allowNull: false,
-        type: Sequelize.INTEGER.UNSIGNED
+        type: Sequelize.INTEGER
       },
       quality: {
         allowNull: false,
-        type: Sequelize.INTEGER.UNSIGNED
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -94,14 +83,12 @@ module.exports = {
         type: Sequelize.DATE
       },
       deletedAt: {
-        allowNull: true,
         type: Sequelize.DATE
       }
     });
   },
 
   async down (queryInterface, Sequelize) {
-   
     await queryInterface.dropTable('image_resizes');
   }
 };
