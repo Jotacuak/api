@@ -85,7 +85,7 @@ module.exports = function(sequelize, DataTypes) {
         }
     }, {
         sequelize,
-        tableName: 'image_configurations',
+        tableName: 'image_resizes',
         timestamps: true,
         paranoid: true,
         indexes: [

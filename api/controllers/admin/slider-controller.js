@@ -1,16 +1,20 @@
 const db = require("../../models");
+const ImageService = require("../../services/image-service");
 const Slider = db.Slider;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-    Slider.create(req.body).then(data => {
-        res.status(200).send(data);
-    }).catch(err => {
-        res.status(500).send({
-            message: err.message || "Algún error ha surgido al insertar el dato."
-        });
-    });
+    new ImageService('slider', 1).uploadImage(req.files);
+
+    // Slider.create(req.body).then(data => {
+    //     new ImageService('slider', data.id).uploadImage(req.files);
+    //     res.status(200).send(data);
+    // }).catch(err => {
+    //     res.status(500).send({
+    //         message: err.message || "Algún error ha surgido al insertar el dato."
+    //     });
+    // });
 };
 
 exports.findAll = (req, res) => {

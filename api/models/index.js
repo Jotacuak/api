@@ -46,10 +46,10 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-db.sequelize.sync().then(() => {
-    console.log("Sincronizado con la base de datos.");
-}).catch((err) => {
-    console.log("Fallo al sincronizar con la base de datos: " + err.message);
-});
+// db.sequelize.sync().then(() => {
+//     console.log("Sincronizado con la base de datos.");
+// }).catch((err) => {
+//     console.log("Fallo al sincronizar con la base de datos: " + err.message);
+// });
 
 module.exports = db;
