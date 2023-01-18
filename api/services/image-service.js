@@ -37,11 +37,12 @@ module.exports = class ImageService {
                         if (err) throw err;
                     });
 
-                    sharp(newPath)
+                    let imageOriginal = sharp(newPath)
                     .metadata()
                     .then(metadata => {
 
-                        ImageOriginal.create({                      
+                        ImageOriginal.create({ 
+
                             path : `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/original/${image.originalname}`,
                             entity : this.entity,
                             entityId : this.entityId,
@@ -52,69 +53,79 @@ module.exports = class ImageService {
                             sizeBytes : image.size,
                             widthPx : metadata.width,
                             heightPx : metadata.height
-                        })
 
-                        .catch(err => {
+                        }).then( imageOriginal  => {
+
+                            if (!fs.existsSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/thumbnail`))){
+                                fs.mkdirSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/thumbnail`));	
+                            }
+        
+                            if (!fs.existsSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/mobile`))){
+                                fs.mkdirSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/mobile`));	
+                            }
+        
+                            if (!fs.existsSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/desktop`))){
+                                fs.mkdirSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/desktop`));	
+                            };
+
+                            return imageOriginal.id
+    
+                        }).then (imageOriginalId => {
+
+                            ImageConfiguration.findAll({
+                                where: {
+                                    entity: this.entity,
+                                    content: image.fieldname
+                                }
+                                
+                            }).then(datas => {
+
+                                datas.forEach(data => {
+        
+                                    sharp(newPath)
+                                    .resize(data.widthPx, data.heightPx)
+                                    .toFormat(data.extensionConversion, {quality: data.quality})
+                                    .toFile(path.join(__dirname, `../storage/images/${this.entity}/${this.entityId}/${data.content}/${data.grid}/${path.parse(image.filename).name}.${data.extensionConversion}`))
+                                    .then(resizeData => {
+                                    
+                                        ImageResize.create({
+                                            imageConfigurationId : data.id,
+                                            imageOriginalId : imageOriginalId,
+                                            title : "titulo",
+                                            alt : "alt",
+                                            path : `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/${data.grid}/${path.parse(image.filename).name}.${data.extensionConversion}`,
+                                            entity : this.entity,
+                                            entityId: this.entityId,
+                                            languageAlias : "es",
+                                            filename: image.filename,
+                                            content : data.content,
+                                            mimeType: `image/${data.extensionConversion}`,
+                                            grid : data.grid,
+                                            sizeBytes : resizeData.size,
+                                            widthPx : resizeData.width,
+                                            heightPx : resizeData.height,
+                                            quality : data.quality
+                                        })
+        
+                                        console.log(`La imagen ${image.originalname} ha sido redimensionada`);
+
+                                    }).catch((err) => {
+                                        console.log(err);
+                                    }); 
+                                })                              
+                            }).catch(err => {
+                                console.log(err);    
+                            }); 
+
+                        }).catch(err => {
                             console.log(err);
-                        });
+                        });   
+
+                    }).catch((err) => {
+                        console.log(err);
                     });
-
-                    if (!fs.existsSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/thumbnail`))){
-                        fs.mkdirSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/thumbnail`));	
-                    }
-
-                    if (!fs.existsSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/mobile`))){
-                        fs.mkdirSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/mobile`));	
-                    }
-
-                    if (!fs.existsSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/desktop`))){
-                        fs.mkdirSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/desktop`));	
-                    }
-                
-
-                    // Previo a realizar el redimensionamiento de imagenes hay que consultar en image
-                    // configurations todas las redimensiones que hay que hacer para la entity e image.fieldname (content) dados
-
-                    // ImageConfiguration.findAll({
-                    //     where: {
-                    //         entity: this.entity,
-                    //         content: image.fieldname
-                    //     }
-                    // });
-                    
-                    // sharp(newPath)
-                    // .resize(200, 200)
-                    // .toFormat('webp')
-                    // .toFile(path.join(__dirname, `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/thumbnail/${path.parse(image.filename).name}.webp`))
-                    // .then(() => {
-
-                    //     Registrar en image resize 
-                    //     ImageResize.create({
-                    //         imageConfigurationId : ,
-                    //         imageOriginalId : ,
-                    //         title : ,
-                    //         alt : ,
-                    //         path : ,
-                    //         entity : this.entity,
-                    //         entityId: this.entityId,
-                    //         languageAlias : "es",
-                    //         filename: image.filename,
-                    //         content : image.fieldname,
-                    //         mimeType: image.mimetype,
-                    //         grid : "200x200",
-                    //         sizeBytes : ,
-                    //         widthPx : 200,
-                    //         height : 200,
-                    //         quality
-                    //     })
-
-                    //     console.log(`La imagen ${image.originalname} ha sido redimensionada`);
-                    // })
-                    // .catch((err) => {
-                    //     console.log(err);
-                    // });
                 });
             });
-        }
-    }
-}
+        };
+    };
+};
