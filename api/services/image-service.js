@@ -78,33 +78,33 @@ module.exports = class ImageService {
                                     content: image.fieldname
                                 }
                                 
-                            }).then(datas => {
+                            }).then(settings => {
 
-                                datas.forEach(data => {
+                                settings.forEach(setting => {
         
                                     sharp(newPath)
-                                    .resize(data.widthPx, data.heightPx)
-                                    .toFormat(data.extensionConversion, {quality: data.quality})
-                                    .toFile(path.join(__dirname, `../storage/images/${this.entity}/${this.entityId}/${data.content}/${data.grid}/${path.parse(image.filename).name}.${data.extensionConversion}`))
+                                    .resize(setting.widthPx, setting.heightPx)
+                                    .toFormat(setting.extensionConversion, {quality: setting.quality})
+                                    .toFile(path.join(__dirname, `../storage/images/${this.entity}/${this.entityId}/${setting.content}/${setting.grid}/${path.parse(image.filename).name}.${setting.extensionConversion}`))
                                     .then(resizeData => {
                                     
                                         ImageResize.create({
-                                            imageConfigurationId : data.id,
+                                            imageConfigurationId : setting.id,
                                             imageOriginalId : imageOriginalId,
                                             title : "titulo",
                                             alt : "alt",
-                                            path : `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/${data.grid}/${path.parse(image.filename).name}.${data.extensionConversion}`,
+                                            path : `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/${setting.grid}/${path.parse(image.filename).name}.${setting.extensionConversion}`,
                                             entity : this.entity,
                                             entityId: this.entityId,
                                             languageAlias : "es",
                                             filename: image.filename,
-                                            content : data.content,
-                                            mimeType: `image/${data.extensionConversion}`,
-                                            grid : data.grid,
+                                            content : setting.content,
+                                            mimeType: `image/${setting.extensionConversion}`,
+                                            grid : setting.grid,
                                             sizeBytes : resizeData.size,
                                             widthPx : resizeData.width,
                                             heightPx : resizeData.height,
-                                            quality : data.quality
+                                            quality : setting.quality
                                         })
         
                                         console.log(`La imagen ${image.originalname} ha sido redimensionada`);
