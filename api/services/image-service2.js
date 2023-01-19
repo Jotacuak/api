@@ -3,9 +3,8 @@ const rimraf = require("rimraf");
 const path = require('path');
 const sharp = require('sharp');
 const db = require("../models");
-const ImageOriginal = db.ImageOriginal;
 const ImageConfiguration = db.ImageConfiguration;
-const ImageResize = db.ImageResize;
+const Image = db.Image;
 
 module.exports = class ImageService {
 
@@ -88,7 +87,7 @@ module.exports = class ImageService {
                                     
                                     rimraf.sync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/${imageConfiguration.grid}`));
 
-                                    await ImageResize.destroy({
+                                    await Image.destroy({
                                         where: {
                                             imageConfigurationId: imageConfiguration.id,
                                             entity: this.entity,
@@ -102,12 +101,12 @@ module.exports = class ImageService {
                                     fs.mkdirSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/${imageConfiguration.grid}`));	
                                 }    
 
-                                const imageResize = await sharp(newPath)
+                                const image = await sharp(newPath)
                                     .resize(imageConfiguration.widthPx, imageConfiguration.heightPx)
                                     .toFormat(imageConfiguration.extensionConversion, { quality: imageConfiguration.quality })
                                     .toFile(path.join(__dirname, `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/${imageConfiguration.grid}/${path.parse(image.filename).name}.${imageConfiguration.extensionConversion}`));
             
-                                await ImageResize.create({
+                                await Image.create({
                                     imageConfigurationId: imageConfiguration.id,
                                     imageOriginalId: imageOriginal.id,
                                     title: "prueba",
@@ -118,9 +117,9 @@ module.exports = class ImageService {
                                     languageAlias: 'es',
                                     filename: image.originalname,
                                     content: image.fieldname,
-                                    mimeType: `image/${imageResize.format}`,
+                                    mimeType: `image/${image.format}`,
                                     grid: imageConfiguration.grid,
-                                    sizeBytes: imageResize.size,
+                                    sizeBytes: image.size,
                                     widthPx: imageConfiguration.widthPx,
                                     heightPx: imageConfiguration.heightPx,
                                     quality: imageConfiguration.quality
@@ -138,7 +137,7 @@ module.exports = class ImageService {
 
     getImages = async () => {
 
-        const images = await ImageResize.findAll({
+        const images = await Image.findAll({
             where: {
                 entity: this.entity,
                 entityId: this.entityId
@@ -157,7 +156,7 @@ module.exports = class ImageService {
             }
         });
 
-        await ImageResize.destroy({
+        await Image.destroy({
             where: {
                 entity: this.entity,
                 entityId: this.entityId

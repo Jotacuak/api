@@ -5,7 +5,7 @@ const sharp = require('sharp');
 const db = require("../models");
 const ImageOriginal = db.ImageOriginal;
 const ImageConfiguration = db.ImageConfiguration;
-const ImageResize = db.ImageResize;
+const Image = db.Image;
 const Op = db.Sequelize.Op;
 
 module.exports = class ImageService {
@@ -88,7 +88,7 @@ module.exports = class ImageService {
                                     .toFile(path.join(__dirname, `../storage/images/${this.entity}/${this.entityId}/${setting.content}/${setting.grid}/${path.parse(image.filename).name}.${setting.extensionConversion}`))
                                     .then(resizeData => {
                                     
-                                        ImageResize.create({
+                                        Image.create({
                                             imageConfigurationId : setting.id,
                                             imageOriginalId : imageOriginalId,
                                             title : "titulo",
