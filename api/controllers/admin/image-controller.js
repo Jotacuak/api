@@ -1,10 +1,10 @@
 const db = require("../../models");
-const ImageResize = db.ImageResize;
+const Image = db.Image;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
-    ImageResize.create(req.body).then(data => {
+    Image.create(req.body).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -52,7 +52,7 @@ exports.findAll = (req, res) => {
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    ImageResize.findAll({ where: condition }).then(data => {
+    Image.findAll({ where: condition }).then(data => {
         res.status(200).send(data);
     }).catch(err => {
         res.status(500).send({
@@ -65,7 +65,7 @@ exports.findOne = (req, res) => {
 
     const id = req.params.id;
 
-    ImageResize.findByPk(id).then(data => {
+    Image.findByPk(id).then(data => {
 
         if (data) {
             res.status(200).send(data);
@@ -86,7 +86,7 @@ exports.update = (req, res) => {
 
     const id = req.params.id;
 
-    ImageResize.update(req.body, {
+    Image.update(req.body, {
         where: { id: id }
     }).then(num => {
         if (num == 1) {
@@ -109,7 +109,7 @@ exports.delete = (req, res) => {
 
     const id = req.params.id;
 
-    ImageResize.destroy({
+    Image.destroy({
         where: { id: id }
     }).then(num => {
         if (num == 1) {

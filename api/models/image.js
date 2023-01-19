@@ -1,17 +1,17 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-    const ImageResize = sequelize.define('ImageResize', {
+    const ImageResize = sequelize.define('Image', {
         id: {
             autoIncrement: true,
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true
         },
-        imageConfigurationId: {
-            type: DataTypes.INTEGER,
+        OriginalFilename: {
+            type: DataTypes.STRING(255),
             allowNull: false
         },
-        imageOriginalId: {
+        imageConfigurationId: {
             type: DataTypes.INTEGER,
             allowNull: false
         },
@@ -20,10 +20,6 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false
         },
         alt: {
-            type: DataTypes.STRING(255),
-            allowNull: false
-        },
-        path: {
             type: DataTypes.STRING(255),
             allowNull: false
         },
@@ -39,19 +35,15 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING(255),
             allowNull: false
         },
-        filename: {
+        resizedFilename: {
             type: DataTypes.STRING(255),
             allowNull: false
         },
-        content: {
+        name: {
             type: DataTypes.TEXT,
             allowNull: false
         },
-        mimeType: {
-            type: DataTypes.STRING(255),
-            allowNull: false
-        },
-        grid: {
+        mediaQuery: {
             type: DataTypes.STRING(255),
             allowNull: false
         },
@@ -59,15 +51,7 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        widthPx: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        heightPx: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        quality: {
+        latency: {
             type: DataTypes.INTEGER,
             allowNull: false
         },
@@ -85,7 +69,7 @@ module.exports = function(sequelize, DataTypes) {
         }
     }, {
         sequelize,
-        tableName: 'image_resizes',
+        tableName: 'images',
         timestamps: true,
         paranoid: true,
         indexes: [
@@ -98,25 +82,17 @@ module.exports = function(sequelize, DataTypes) {
                 ]
             },
             {
-                name: "FK_image_resizes_image_configurations",
+                name: "FK_images_image_configurations",
                 using: "BTREE",
                 fields: [
                     { name: "imageConfigurationId" },
                 ]
-            },
-            {
-                name: "FK_image_resizes_image_originals",
-                using: "BTREE",
-                fields: [
-                    { name: "imageOriginalId" },
-                ]
-            },
+            }
         ]
     });
 
     ImageResize.associate = function(models) {
         ImageResize.belongsTo(models.ImageConfiguration, { foreignKey: 'imageConfigurationId' });
-        ImageResize.belongsTo(models.ImageOriginal, { foreignKey: 'imageOriginalId' });
     };
 
     return ImageResize;

@@ -11,27 +11,11 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.STRING(255),
             allowNull: false
         },
-        directory: {
+        name: {
             type: DataTypes.STRING(255),
             allowNull: false
         },
-        type: {
-            type: DataTypes.STRING(255),
-            allowNull: false
-        },
-        content: {
-            type: DataTypes.STRING(255),
-            allowNull: false
-        },
-        grid: {
-            type: DataTypes.STRING(255),
-            allowNull: false
-        },
-        contentAccepted: {
-            type: DataTypes.STRING(255),
-            allowNull: false
-        },
-        extensionConversion: {
+        mediaQuery: {
             type: DataTypes.STRING(255),
             allowNull: false
         },
@@ -46,7 +30,7 @@ module.exports = function(sequelize, DataTypes) {
         quality: {
             type: DataTypes.INTEGER,
             allowNull: false
-        },
+        }, 
         createdAt: {
             type: DataTypes.DATE,
             allowNull: false
@@ -77,7 +61,7 @@ module.exports = function(sequelize, DataTypes) {
     });
 
     ImageConfiguration.associate = function(models) {
-        ImageConfiguration.hasMany(models.ImageResize, { as: 'imageResizes', foreignKey: 'imageConfigurationId'});
+        ImageConfiguration.hasMany(models.Image, { as: 'images', foreignKey: 'imageConfigurationId'});
     };
 
     return ImageConfiguration;
