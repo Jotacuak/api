@@ -5,3 +5,7 @@ import {contactForm} from './desktop/contactForm.js'
 loginForm();
 form();
 contactForm();
+
+// Forma de importar un web-component
+import './desktop/pageTitle.js';
+import './desktop/menu.js';

@@ -1,131 +1,170 @@
-const fs = require('fs');
-const { get } = require('http');
+const fs = require('fs/promises');
 const path = require('path');
 const sharp = require('sharp');
 const db = require("../models");
-const ImageOriginal = db.ImageOriginal;
 const ImageConfiguration = db.ImageConfiguration;
 const Image = db.Image;
-const Op = db.Sequelize.Op;
 
 module.exports = class ImageService {
 
-    constructor(entity, entityId) {
-        this.entity = entity;
-        this.entityId = entityId;
-    }
+    uploadImage = async images => {
 
-    uploadImage = images => {
-        
+        let result = [];
+
         for (let key in images) {
 
-            images[key].forEach(image => {
+            for(let image of images[key]) {
 
-                if(image.fieldname.includes('[]')){
-                    image.fieldname = image.fieldname.replace('[]', '');
-                }
-                
-                let oldPath = path.join(__dirname, `../storage/tmp/${image.originalname}`);
-                let newPath = path.join(__dirname, `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/original/${image.originalname}`);    
-                let newDir = path.dirname(newPath);
+                try{
 
-                fs.mkdir(newDir, { recursive: true }, (err) => {
+                    if(image.originalname.includes(' ')){
+                        image.filename = image.originalname.replace(' ', '-');
+                    }
+                    
+                    let oldPath = path.join(__dirname, `../storage/tmp/${image.originalname}`);
 
-                    if (err) throw err;
-
-                    fs.rename(oldPath, newPath, (err) => {
-                        if (err) throw err;
+                    let filename = await fs.access(path.join(__dirname, `../storage/images/gallery/original/${path.parse(image.filename).name}.webp`)).then(async () => {
+                        return `${path.parse(image.filename).name}-${new Date().getTime()}.webp`;
+                    }).catch(async () => {
+                        return `${path.parse(image.filename).name}.webp`;
                     });
+                        
+                    await sharp(oldPath)
+                    .webp({ lossless: true })
+                    .toFile(path.join(__dirname, `../storage/images/gallery/original/${filename}`));
 
-                    let imageOriginal = sharp(newPath)
-                    .metadata()
-                    .then(metadata => {
+                    await sharp(oldPath)
+                    .resize(135,135)
+                    .webp({ lossless: true })
+                    .toFile(path.join(__dirname, `../storage/images/gallery/thumbnail/${filename}`));
 
-                        ImageOriginal.create({ 
+                    await fs.unlink(oldPath);
 
-                            path : `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/original/${image.originalname}`,
-                            entity : this.entity,
-                            entityId : this.entityId,
-                            languageAlias : "es",
-                            filename : image.originalname,
-                            content : image.fieldname,
-                            mimeType : image.mimetype,
-                            sizeBytes : image.size,
-                            widthPx : metadata.width,
-                            heightPx : metadata.height
+                    result.push(filename);
 
-                        }).then( imageOriginal  => {
+                } catch (error) {
+                    console.log(error);
+                }    
+            }
+        }
 
-                            if (!fs.existsSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/thumbnail`))){
-                                fs.mkdirSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/thumbnail`));	
-                            }
-        
-                            if (!fs.existsSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/mobile`))){
-                                fs.mkdirSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/mobile`));	
-                            }
-        
-                            if (!fs.existsSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/desktop`))){
-                                fs.mkdirSync(path.join(__dirname,  `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/desktop`));	
-                            };
+        return result;
+    }
 
-                            return imageOriginal.id
+    resizeImages = async (entity, entityId, images) => {
+
+        try{
+
+            for (let key in images) {
+
+                if (key.startsWith('images')) {
     
-                        }).then (imageOriginalId => {
-
-                            ImageConfiguration.findAll({
-                                where: {
-                                    entity: this.entity,
-                                    content: image.fieldname
-                                }
-                                
-                            }).then(settings => {
-
-                                settings.forEach(setting => {
-        
-                                    sharp(newPath)
-                                    .resize(setting.widthPx, setting.heightPx)
-                                    .toFormat(setting.extensionConversion, {quality: setting.quality})
-                                    .toFile(path.join(__dirname, `../storage/images/${this.entity}/${this.entityId}/${setting.content}/${setting.grid}/${path.parse(image.filename).name}.${setting.extensionConversion}`))
-                                    .then(resizeData => {
-                                    
-                                        Image.create({
-                                            imageConfigurationId : setting.id,
-                                            imageOriginalId : imageOriginalId,
-                                            title : "titulo",
-                                            alt : "alt",
-                                            path : `../storage/images/${this.entity}/${this.entityId}/${image.fieldname}/${setting.grid}/${path.parse(image.filename).name}.${setting.extensionConversion}`,
-                                            entity : this.entity,
-                                            entityId: this.entityId,
-                                            languageAlias : "es",
-                                            filename: image.filename,
-                                            content : setting.content,
-                                            mimeType: `image/${setting.extensionConversion}`,
-                                            grid : setting.grid,
-                                            sizeBytes : resizeData.size,
-                                            widthPx : resizeData.width,
-                                            heightPx : resizeData.height,
-                                            quality : setting.quality
-                                        })
-        
-                                        console.log(`La imagen ${image.originalname} ha sido redimensionada`);
-
-                                    }).catch((err) => {
-                                        console.log(err);
-                                    }); 
-                                })                              
-                            }).catch(err => {
-                                console.log(err);    
-                            }); 
-
-                        }).catch(err => {
-                            console.log(err);
-                        });   
-
-                    }).catch((err) => {
-                        console.log(err);
+                    let keySplit = key.split('-');
+                    let name = keySplit[1];
+                    let languageAlias = keySplit[2];
+                    let originalFilenames = images[key].split(',');
+    
+                    const imageConfigurations =  await ImageConfiguration.findAll({
+                        where: {
+                            entity: entity,
+                            name: name
+                        }
                     });
-                });
-            });
-        };
-    };
-};
+    
+                    for (let imageConfiguration of imageConfigurations) {
+
+                        for (let originalFilename of originalFilenames) {
+        
+                            let imageResize = {};
+        
+                            await fs.access(path.join(__dirname, `../storage/images/resized/${originalFilename}-${imageConfiguration.widthPx}x${imageConfiguration.heightPx}.webp`)).then(async () => {
+        
+                                let start = new Date().getTime();
+        
+                                let stats = await fs.stat(path.join(__dirname, `../storage/images/resized/${originalFilename}-${imageConfiguration.widthPx}x${imageConfiguration.heightPx}.webp`));
+                                imageResize = await sharp(path.join(__dirname, `../storage/images/resized/${originalFilename}-${imageConfiguration.widthPx}x${imageConfiguration.heightPx}.webp`)).metadata();
+                                imageResize.size = stats.size;
+        
+                                let end = new Date().getTime();
+        
+                                imageResize.latency = end - start;                        
+        
+                            }).catch(async () => {
+        
+                                let start = new Date().getTime();
+                                
+                                imageResize = await sharp(path.join(__dirname, `../storage/images/gallery/original/${originalFilename}`))
+                                .resize(imageConfiguration.widthPx, imageConfiguration.heightPx)
+                                .webp({ nearLossless: true })
+                                .toFile(path.join(__dirname, `../storage/images/resized/${originalFilename}-${imageConfiguration.widthPx}x${imageConfiguration.heightPx}.webp`));
+                                
+                                let end = new Date().getTime();
+        
+                                imageResize.latency = end - start;                        
+                            });
+        
+                            await Image.create({
+                                imageConfigurationId: imageConfiguration.id,
+                                entityId: entityId,
+                                entity: entity,
+                                name: name,
+                                originalFilename: originalFilename,
+                                resizedFilename: `${originalFilename}-${imageConfiguration.widthPx}x${imageConfiguration.heightPx}.webp`,
+                                title: "prueba",
+                                alt: "prueba",
+                                languageAlias: languageAlias,
+                                mediaQuery: imageConfiguration.mediaQuery,
+                                sizeBytes: imageResize.size,
+                                latency: imageResize.latency,
+                            });     
+                        }
+                    }
+                }
+            }
+
+            return true;
+
+        }catch(error){
+
+            console.log(error);
+
+            return false;
+        }
+    }
+
+    deleteImages = async filename => {
+
+        try{
+            await fs.unlink(path.join(__dirname, `../storage/images/gallery/original/${filename}`));
+            await fs.unlink(path.join(__dirname, `../storage/images/gallery/thumbnail/${filename}`));
+            
+            return 1;
+
+        }catch{
+            return 0;
+        }
+    }
+
+    getThumbnails = async (limit, offset) => {
+
+        let images = {};
+        let files = await fs.readdir(path.join(__dirname, `../storage/images/gallery/thumbnail`));
+
+        images.filenames = await fs.readdir(path.join(__dirname, `../storage/images/gallery/thumbnail`), { limit: limit, offset: offset});
+        images.count = files.length;
+    
+        return images;
+    }
+
+    getImages = async (entity, entityId) => {
+
+        const images = await Image.findAll({
+            where: {
+                entity: entity,
+                entityId: entityId
+            }
+        });
+
+        return images;
+    }
+}

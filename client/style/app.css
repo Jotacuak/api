@@ -9,6 +9,20 @@ body{
     width: 100%;
 }
 
+.two-columns-aside{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.two-columns-aside .main-column{
+    width: 70%
+}
+
+.two-columns-aside .aside-column{
+    width: 22%;
+}
+
 .desktop-two-columns{
     display: flex;
     justify-content: space-around;
