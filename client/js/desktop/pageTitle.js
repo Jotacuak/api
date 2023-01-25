@@ -32,7 +32,7 @@ class PageTitle extends HTMLElement {
         <style>
             h2 {   
                 color: hsl(288, 69%, 87%);
-                font-family: 'Ubuntu';
+                font-family: 'Comic Sans MS';
                 font-size: 2em;
                 font-weight: 600;
                 margin: 0;

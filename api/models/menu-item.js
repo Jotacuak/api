@@ -7,46 +7,45 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false,
             primaryKey: true
         },
-        name: {
-            type: DataTypes.STRING(10),
-            allowNull: false,
-            validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo nombre."
-                },
-                notEmpty:{
-                    msg: "Error en el campo nombre. Debe rellenar el campo nombre."
-                }
-            }
-        },
         menuId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
                 model: 'menus',
                 key: 'id'
-            },
-            validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo menu Id."
+            }
+        },
+        name: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+            validator: {
+                notNull: {
+                    msg: 'Por favor, rellena el campo "Nombre".'
                 }
             }
         },
         customUrl: {
-            type: DataTypes.STRING(10),
-            allowNull: false,
-            validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo URL."
-                },
-                notEmpty:{
-                    msg: "Error en el campo URL. Debe rellenar el campo URL."
+            type: DataTypes.STRING(255)
+        },
+        order: {
+            type: DataTypes.INTEGER,
+            defaultValue: 1,
+            validator: {
+                notNull: {
+                    msg: 'Por favor, rellena el campo "Orden".'
                 }
+            }
+        },
+        parentId: {
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'menu_items',
+                key: 'id'
             }
         }
     }, {
         sequelize,
-        tableName: 'menu-items',
+        tableName: 'menu_items',
         timestamps: true,
         paranoid: true,
         indexes: [
@@ -64,11 +63,11 @@ module.exports = function(sequelize, DataTypes) {
                 fields: [
                     { name: "menuId" },
                 ]
-            },
+            }
         ]
     });
 
-    MenuItem.associate = function(models){
+    MenuItem.associate = function(models) {
         MenuItem.belongsTo(models.Menu, { as: "menu", foreignKey: "menuId"});
     };
 

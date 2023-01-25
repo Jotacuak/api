@@ -1,5 +1,5 @@
 body{
-    font-family: 'Marcellus SC';
+    font-family: 'Comic Sans MS';
 }
 
 .main-title{
@@ -73,19 +73,19 @@ body{
     border: .1rem solid black;
     border-radius: .25rem;
     cursor: pointer;
-    font-family: 'Marcellus SC';
+    font-family: 'Comic Sans MS';
     font-weight: 800;
     margin-top: 1rem;
     padding: .5rem 1rem;
     width: 100%;
 }
 
-.faqs{
+.faqs, .taxes{
     margin-top: 2rem;
     width: 90%;
 }
 
-.faqs-table-element{
+.table-element{
     border: .1rem solid black;
     display: flex;
     flex-direction: row;
@@ -93,41 +93,41 @@ body{
     margin: 1rem auto;
 }
 
-.faqs-table-element-texts{
+.table-element-texts{
     margin-left: 1rem;
 }
 
-.faqs-table-element-buttons{
+.table-element-buttons{
     display: flex;
     flex-direction: row;
     margin-top: .8rem
 }
 
-.faqs-form-element input,textarea{
+.form-element input,textarea{
     height: 2rem;
     width: 100%;
 }
 
-.faqs-form-element textarea{
+.form-element textarea{
     height: 15vh;
     resize: none;
 }
 
-.faqs-table-element-button .table-button{
+.table-element-button .table-button{
     background: none;
     border: none;
 }
 
-.faqs-table-element-button .table-button svg{
+.table-element-button .table-button svg{
     height: 2rem;
     width: 2rem;
 }
 
-.faqs-table-element-button .table-button svg path{
+.table-element-button .table-button svg path{
     fill: hsl(288, 69%, 87%);
 }
 
-.faqs-form-element{
+.form-element{
     margin: .5rem 0;
 }
 

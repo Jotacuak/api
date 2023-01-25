@@ -2,26 +2,41 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-
-  up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('menu-items', {
+  async up (queryInterface, Sequelize) {
+    await queryInterface.createTable('menu_items', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      menuId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'menus',
+          key: 'id'
+        }
+      },
       name: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      menuId: {
-        allowNull: false,
-        type: Sequelize.INTEGER
-      },
       customUrl: {
         allowNull: false,
         type: Sequelize.STRING
+      },
+      order: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      parentId: {
+        allowNull: true,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'menu_items',
+          key: 'id'
+        }
       },
       createdAt: {
         allowNull: false,
@@ -37,7 +52,7 @@ module.exports = {
     });
   },
 
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('menu-items');
+  async down (queryInterface, Sequelize) {
+    await queryInterface.dropTable('menu_items');
   }
 };

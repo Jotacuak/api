@@ -2,34 +2,51 @@ const db = require("../../models");
 const MenuItem = db.MenuItem;
 const Op = db.Sequelize.Op;
 
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
 
-    MenuItem.create(req.body).then(data => {
+    try{
+        let data = await MenuItem.create(req.body);
         res.status(200).send(data);
-    }).catch(err => {
+    }catch(error){
         res.status(500).send({
-            message: err.message || "Algún error ha surgido al insertar el dato."
+            message: error.message || "Algún error ha surgido al insertar el dato.",
+            errors: error.errors
         });
-    });
+    }
 };
 
-exports.findAll = (req, res) => {
+exports.findAll = async (req, res) => {
 
+    let page = req.query.page || 1;
+    let limit = req.query.size || 10;
+    let offset = (page - 1) * limit;
     let whereStatement = {};
 
-    if(req.query.name)
-        whereStatement.name = {[Op.substring]: req.query.name};
-        
-    if(req.query.menuId)
-        whereStatement.menuId = {[Op.substring]: req.query.menuId};
-    
-    if(req.query.customUrl)
-    whereStatement.customUrl = {[Op.substring]: req.query.customUrl};
+    for (let key in req.query) {
+        if (req.query[key] != "" && key != "page" && key != "size") {
+            whereStatement[key] = {[Op.substring]: req.query[key]};
+        }
+    }
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    MenuItem.findAll({ where: condition }).then(data => {
-        res.status(200).send(data);
+    MenuItem.findAndCountAll({
+        where: condition, 
+        attributes: ['id', 'name', 'customUrl'],
+        limit: limit,
+        offset: offset,
+        order: [['createdAt', 'DESC']]
+    })
+    .then(result => {
+
+        result.meta = {
+            total: result.count,
+            pages: Math.ceil(result.count / limit),
+            currentPage: page
+        };
+
+        res.status(200).send(result);
+
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Algún error ha surgido al recuperar los datos."

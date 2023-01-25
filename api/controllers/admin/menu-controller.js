@@ -2,28 +2,51 @@ const db = require("../../models");
 const Menu = db.Menu;
 const Op = db.Sequelize.Op;
 
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
 
-    Menu.create(req.body).then(data => {
+    try{
+        let data = await Menu.create(req.body);
         res.status(200).send(data);
-    }).catch(err => {
+    }catch(error){
         res.status(500).send({
-            message: err.message || "Algún error ha surgido al insertar el dato."
+            message: error.message || "Algún error ha surgido al insertar el dato.",
+            errors: error.errors
         });
-    });
+    }
 };
 
-exports.findAll = (req, res) => {
+exports.findAll = async (req, res) => {
 
+    let page = req.query.page || 1;
+    let limit = req.query.size || 10;
+    let offset = (page - 1) * limit;
     let whereStatement = {};
 
-    if(req.query.type)
-        whereStatement.name = {[Op.substring]: req.query.name};
+    for (let key in req.query) {
+        if (req.query[key] != "" && key != "page" && key != "size") {
+            whereStatement[key] = {[Op.substring]: req.query[key]};
+        }
+    }
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    Menu.findAll({ where: condition }).then(data => {
-        res.status(200).send(data);
+    Menu.findAndCountAll({
+        where: condition, 
+        attributes: ['id', 'name'],
+        limit: limit,
+        offset: offset,
+        order: [['createdAt', 'DESC']]
+    })
+    .then(result => {
+
+        result.meta = {
+            total: result.count,
+            pages: Math.ceil(result.count / limit),
+            currentPage: page
+        };
+
+        res.status(200).send(result);
+
     }).catch(err => {
         res.status(500).send({
             message: err.message || "Algún error ha surgido al recuperar los datos."
@@ -97,3 +120,49 @@ exports.delete = (req, res) => {
         });
     });
 };
+
+exports.getMenuItems = (req, res) => {
+
+    const menuName = req.params.name;
+
+    Menu.findOne({
+        where: { name: menuName },
+        include: [{
+            model: db.MenuItem,
+            as: 'menuItems',
+            order: [
+                ['parentId', 'ASC'],
+                ['order', 'ASC']
+            ]
+        }]
+
+    }).then(data => {
+            
+        if (data) {
+
+            const nestedObject = {};
+            
+            data.menuItems.forEach(item => {
+                if (item.parentId === null) {
+                    nestedObject[item.id] = item;
+                    nestedObject[item.id].dataValues.children = [];
+                }else {
+                    nestedObject[item.parentId].dataValues.children.push(item);
+                }
+            });
+           
+            res.status(200).send(nestedObject);
+
+        } else {
+            res.status(404).send({
+                message: `No se puede encontrar el elemento con el nombre=${menuName}.`
+            });
+        }
+
+    }).catch(err => {
+        console.log(err);
+        res.status(500).send({
+            message: "Algún error ha surgido al recuperar el nombre=" + menuName
+        });
+    });
+}

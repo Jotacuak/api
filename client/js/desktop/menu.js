@@ -3,15 +3,38 @@ class Menu extends HTMLElement {
     constructor(){
         super();
         this.shadow = this.attachShadow({ mode: 'open' });
+        this.menuType = this.getAttribute('menu');
         this.menuItems = [];
     }
 
     connectedCallback(){
-        this.render();
+        this.loadData().then( () => this.render());
     }
 
     attributeChangedCallback(name, oldValue, newValue){
         this.render();
+    }
+
+    async loadData(){
+        
+        try{
+
+            let url = `http://127.0.0.1:8080/api/admin/menus/display/${this.menuType}`;
+
+            let result = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken'),
+                }
+            });
+    
+            let data = await result.json();
+
+            this.menuItems = Object.values(data);
+
+        }catch(error){
+            console.log(error);
+        }
     }
 
     render() {
@@ -19,6 +42,12 @@ class Menu extends HTMLElement {
         this.shadow.innerHTML =
         `
         <style>
+
+            svg{
+                height: 1rem;
+                width: 1rem;
+            }
+
             .menu-hamburger {
                 width: 25%;
             }           
@@ -77,6 +106,42 @@ class Menu extends HTMLElement {
                 top: 9vh;
             }
 
+            ul, li{
+                list-style:none;
+            }
+
+            ul{
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-around;
+            }
+
+            .sub-menu-parent { position: relative; }
+
+            .sub-menu { 
+                visibility: hidden;
+                opacity: 0;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                transform: translateY(-2em);
+                z-index: -1;
+                transition: all 0.3s ease-in-out 0s, visibility 0s linear 0.3s, z-index 0s linear 0.01s;
+            }
+
+            .sub-menu-parent:focus .sub-menu,
+            .sub-menu-parent:focus-within .sub-menu,
+            .sub-menu-parent:hover .sub-menu {
+                visibility: visible;
+                opacity: 1;
+                z-index: 1;
+                transform: translateY(10%);
+                transform: translateX(-30%);
+                transition-delay: 0s, 0s, 0.3s;
+            }
+
         </style>
 
         <div class="overlay" id="overlay">
@@ -97,14 +162,87 @@ class Menu extends HTMLElement {
         let hamburger = this.shadow.getElementById("collapse-button");
         let overlay = this.shadow.getElementById("overlay");
 
+        this.menuItems.forEach(menuItem => {
+
+            let parentList = this.shadow.querySelector("#menu ul");
+            let list = document.createElement("li");
+            let link = document.createElement("a");
+
+            parentList.appendChild(list);
+            list.appendChild(link);
+
+            if(menuItem.customUrl.length > 0){
+                link.setAttribute("href", menuItem.customUrl);
+
+                link.addEventListener("click", (event) =>{
+
+                    event.preventDefault();
+    
+                    hamburger.classList.toggle("active");
+                    overlay.classList.toggle("active");
+    
+                    document.dispatchEvent(new CustomEvent('newUrl', {
+                        detail: {
+                            url: link.getAttribute('href'),
+                            title: link.textContent,
+                        }
+                    }));
+                })
+            } 
+
+            link.textContent = menuItem.name;        
+
+            if(menuItem.children.length > 0){
+
+                list.setAttribute("class", "sub-menu-parent")
+
+                let subList = document.createElement("ul");
+                subList.setAttribute("class", "sub-menu");
+
+                menuItem.children.forEach(child => {
+
+                    let subItem = document.createElement("li");
+                    let subLink = document.createElement("a");
+
+                    subList.appendChild(subItem);
+                    subItem.appendChild(subLink);
+
+                    subLink.setAttribute("href", child.customUrl);
+                    subLink.textContent = child.name;
+
+                    subLink.addEventListener("click", (event) =>{
+
+                        event.preventDefault();
+
+                        hamburger.classList.toggle("active");
+                        overlay.classList.toggle("active");
+        
+                        document.dispatchEvent(new CustomEvent('newUrl', {
+                            detail: {
+                                url: subLink.getAttribute('href'),
+                                title: subLink.textContent,
+                            }
+                        }));
+                    })
+
+                })
+
+                list.appendChild(subList);
+
+            }
+            
+        });
+
+           
         hamburger.addEventListener("click", (event) => {
 
             event.preventDefault();
 
             hamburger.classList.toggle("active");
-            overlay.classList.toggle("active");  
-        })
-    }
+            overlay.classList.toggle("active");
+            
+        });
+    };
 
 }
 
