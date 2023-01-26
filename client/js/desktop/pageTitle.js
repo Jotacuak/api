@@ -36,7 +36,7 @@ class PageTitle extends HTMLElement {
                 font-size: 2em;
                 font-weight: 600;
                 margin: 0;
-                margin-left: 7rem;
+                margin-left: 9rem;
                 text-decoration: none;
                 text-align:left;
             }

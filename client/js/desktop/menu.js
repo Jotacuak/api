@@ -3,7 +3,7 @@ class Menu extends HTMLElement {
     constructor(){
         super();
         this.shadow = this.attachShadow({ mode: 'open' });
-        this.menuType = this.getAttribute('menu');
+        this.menu = this.getAttribute('menu');
         this.menuItems = [];
     }
 
@@ -19,7 +19,7 @@ class Menu extends HTMLElement {
         
         try{
 
-            let url = `http://127.0.0.1:8080/api/admin/menus/display/${this.menuType}`;
+            let url = `http://127.0.0.1:8080/api/admin/menus/display/${this.menu}`;
 
             let result = await fetch(url, {
                 method: 'GET',
@@ -42,11 +42,6 @@ class Menu extends HTMLElement {
         this.shadow.innerHTML =
         `
         <style>
-
-            svg{
-                height: 1rem;
-                width: 1rem;
-            }
 
             .menu-hamburger {
                 width: 25%;
@@ -158,78 +153,32 @@ class Menu extends HTMLElement {
             </button>
         </div> 
         `
-
         let hamburger = this.shadow.getElementById("collapse-button");
         let overlay = this.shadow.getElementById("overlay");
+        let menuList = this.shadow.querySelector("#menu ul");
 
         this.menuItems.forEach(menuItem => {
 
-            let parentList = this.shadow.querySelector("#menu ul");
             let list = document.createElement("li");
             let link = document.createElement("a");
 
-            parentList.appendChild(list);
+            link.setAttribute("href", menuItem.customUrl);
+            link.textContent = menuItem.name;
+
             list.appendChild(link);
 
-            if(menuItem.customUrl.length > 0){
-                link.setAttribute("href", menuItem.customUrl);
+            this.createSubMenu(menuItem, list);
 
-                link.addEventListener("click", (event) =>{
+            menuList.appendChild(list);
 
-                    event.preventDefault();
-    
-                    hamburger.classList.toggle("active");
-                    overlay.classList.toggle("active");
-    
-                    document.dispatchEvent(new CustomEvent('newUrl', {
-                        detail: {
-                            url: link.getAttribute('href'),
-                            title: link.textContent,
-                        }
-                    }));
-                })
-            } 
+            link.addEventListener("click", (event) => {
 
-            link.textContent = menuItem.name;        
+                event.preventDefault();
 
-            if(menuItem.children.length > 0){
+                hamburger.classList.toggle("active");
+                overlay.classList.toggle("active");
 
-                list.setAttribute("class", "sub-menu-parent")
-
-                let subList = document.createElement("ul");
-                subList.setAttribute("class", "sub-menu");
-
-                menuItem.children.forEach(child => {
-
-                    let subItem = document.createElement("li");
-                    let subLink = document.createElement("a");
-
-                    subList.appendChild(subItem);
-                    subItem.appendChild(subLink);
-
-                    subLink.setAttribute("href", child.customUrl);
-                    subLink.textContent = child.name;
-
-                    subLink.addEventListener("click", (event) =>{
-
-                        event.preventDefault();
-
-                        hamburger.classList.toggle("active");
-                        overlay.classList.toggle("active");
-        
-                        document.dispatchEvent(new CustomEvent('newUrl', {
-                            detail: {
-                                url: subLink.getAttribute('href'),
-                                title: subLink.textContent,
-                            }
-                        }));
-                    })
-
-                })
-
-                list.appendChild(subList);
-
-            }
+            })
             
         });
 
@@ -243,6 +192,53 @@ class Menu extends HTMLElement {
             
         });
     };
+
+    createSubMenu(menuItem, list) {
+
+        let hamburger = this.shadow.getElementById("collapse-button");
+        let overlay = this.shadow.getElementById("overlay");
+
+        if(menuItem.children){
+            
+            list.setAttribute("class", "sub-menu-parent")
+
+            let subList = document.createElement("ul");
+            subList.setAttribute("class", "sub-menu");
+
+            menuItem.children.forEach(child => {
+
+                let subItem = document.createElement("li");
+                let subLink = document.createElement("a");
+
+                subList.appendChild(subItem);
+                subItem.appendChild(subLink);
+
+                subLink.setAttribute("href", child.customUrl);
+                subLink.textContent = child.name;
+
+                subLink.addEventListener("click", (event) =>{
+
+                    event.preventDefault();
+
+                    hamburger.classList.toggle("active");
+                    overlay.classList.toggle("active");
+    
+                    document.dispatchEvent(new CustomEvent('newUrl', {
+                        detail: {
+                            url: subLink.getAttribute('href'),
+                            title: subLink.textContent.toUpperCase(),
+                        }
+                    }));
+                })
+
+                this.createSubMenu(child,subList);
+
+            })
+
+            list.appendChild(subList);
+        }
+
+    }
 
 }
 

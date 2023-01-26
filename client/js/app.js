@@ -9,3 +9,4 @@ contactForm();
 // Forma de importar un web-component
 import './desktop/pageTitle.js';
 import './desktop/menu.js';
+import './desktop/table.js';

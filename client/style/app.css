@@ -70,7 +70,7 @@ body{
 
 .admin-submit-button{
     background-color: hsl(288, 69%, 87%);
-    border: .1rem solid black;
+    border: .1rem solid hsl(0, 2%, 56%);
     border-radius: .25rem;
     cursor: pointer;
     font-family: 'Comic Sans MS';
