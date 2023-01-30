@@ -17,6 +17,22 @@ exports.create = async (req, res) => {
     }
 };
 
+exports.findOne = async (req, res) => {
+
+    const fileName = req.params.filename;
+
+    var options = {
+        root: __dirname + '../../../storage/images/gallery/thumbnail/',
+        dotfiles: 'deny',
+        headers: {
+            'x-timestamp': Date.now(),
+            'x-sent': true
+        }
+    };
+
+    res.sendFile(fileName, options);
+};
+
 exports.findAll = async (req, res) => {
 
     let page = req.query.page || 1;

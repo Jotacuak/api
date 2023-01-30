@@ -1,10 +1,12 @@
+import { API_URL } from '../../config/config.js';
+
 class Table extends HTMLElement {
 
     constructor() {
         super();
         this.shadow = this.attachShadow({ mode: 'open' });
         this.url = this.getAttribute('url');
-        this.tableData = [];
+        this.tableDatas = [];
     }
 
     static get observedAttributes() { return ['url']; }
@@ -28,7 +30,7 @@ class Table extends HTMLElement {
         
         try{
 
-            let url = `http://127.0.0.1:8080${this.getAttribute('url')}`;
+            let url = `${API_URL}${this.getAttribute('url')}`;
 
 
             let result = await fetch(url, {

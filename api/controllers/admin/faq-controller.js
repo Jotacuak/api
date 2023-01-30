@@ -20,23 +20,11 @@ exports.findAll = (req, res) => {
     if(req.query.name)
         whereStatement.name = {[Op.substring]: req.query.name};
         
-    if(req.query.phoneNumber)
-        whereStatement.phoneNumber = {[Op.substring]: req.query.phoneNumber};
+    if(req.query.question)
+        whereStatement.question = {[Op.substring]: req.query.question};
 
-    if(req.query.mobileNumber)
-        whereStatement.mobileNumber = {[Op.substring]: req.query.mobileNumber};
-        
-    if(req.query.cifNumber)
-        whereStatement.cifNumber = {[Op.substring]: req.query.cifNumber};
-
-    if(req.query.openingDays)
-        whereStatement.openingDays = {[Op.substring]: req.query.openingDays};
-        
-    if(req.query.customerServiceHours)
-        whereStatement.customerServiceHours = {[Op.substring]: req.query.customerServiceHours};
-
-    if(req.query.visible)
-        whereStatement.visible = {[Op.substring]: req.query.visible};
+    if(req.query.answer)
+        whereStatement.answer = {[Op.substring]: req.query.answer};
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 

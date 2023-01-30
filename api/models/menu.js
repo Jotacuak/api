@@ -8,17 +8,29 @@ module.exports = function(sequelize, DataTypes) {
             primaryKey: true
         },
         name: {
-            type: DataTypes.STRING(10),
+            type: DataTypes.STRING(255),
             allowNull: false,
-            validate: {
-                notNull:{
-                    msg: "Debe rellenar el campo nombre."
-                },
-                notEmpty:{
-                    msg: "Error en el campo nombre. Debe rellenar el campo nombre."
+            validator: {
+                notNull: {
+                    msg: 'Por favor, rellena el campo "Nombre".'
                 }
             }
         },
+        customUrl: {
+            type: DataTypes.STRING(255),
+        },
+        order: {
+            type: DataTypes.INTEGER,
+            defaultValue: 1,
+            validator: {
+                notNull: {
+                    msg: 'Por favor, rellena el campo "Orden".'
+                }
+            }
+        },
+        parentId: {
+            type: DataTypes.INTEGER
+        }
     }, {
         sequelize,
         tableName: 'menus',
@@ -32,12 +44,13 @@ module.exports = function(sequelize, DataTypes) {
                 fields: [
                     { name: "id" },
                 ]
-            },
+            }
         ]
     });
 
-    Menu.associate = function(models){
-        Menu.hasMany(models.MenuItem, { as: "menuItems", foreignKey: "menuId"});
+    Menu.associate = function(models) {
+        Menu.belongsTo(models.Menu, { as: 'parent', foreignKey: 'parentId' });
+        Menu.hasMany(models.Menu, { as: 'children', foreignKey: 'parentId' });
     };
 
     return Menu;

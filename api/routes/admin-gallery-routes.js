@@ -13,11 +13,12 @@ module.exports = (app, upload) => {
   });
 
   let uploadFields = upload.fields([
-    {name: 'images', maxCount: 10},
+    {name: 'file', maxCount: 1},
   ])
 
   router.post("/", [authJwt.verifyUserToken, uploadFields], controller.create);
   router.get("/", [authJwt.verifyUserToken], controller.findAll);  
+  router.get("/:filename", controller.findOne);  
   router.delete("/:filename", [authJwt.verifyUserToken], controller.delete);
 
   app.use('/api/admin/image-gallery', router);

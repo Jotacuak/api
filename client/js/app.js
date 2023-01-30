@@ -10,3 +10,6 @@ contactForm();
 import './desktop/pageTitle.js';
 import './desktop/menu.js';
 import './desktop/table.js';
+import './desktop/message.js';
+import './desktop/imageGallery.js';
+import './desktop/uploadImageButton.js';

@@ -1,7 +1,6 @@
 export let loginForm = () => {
 
     let submitButton = document.getElementById('submit-button');
-    let form = document.getElementById('admin-faqs-form');
 
     if(submitButton) {
 

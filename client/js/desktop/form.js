@@ -25,10 +25,24 @@ export let form = () => {
                     
                 if (!response.ok) throw response;
 
+                document.dispatchEvent(new CustomEvent('message', {
+                    detail: {
+                        text: "Todo bien",
+                        type: "success",
+                    }
+                }));
+
                 return response.json();
 
             })
             .catch(error => {
+
+                document.dispatchEvent(new CustomEvent('message', {
+                    detail: {
+                        text: error.statusText,
+                        type: "mistake",
+                    }
+                }));
 
                 console.log(error);
             

@@ -125,33 +125,18 @@ exports.getMenuItems = (req, res) => {
 
     const menuName = req.params.name;
 
-    Menu.findOne({
-        where: { name: menuName },
-        include: [{
-            model: db.MenuItem,
-            as: 'menuItems',
-            order: [
-                ['parentId', 'ASC'],
-                ['order', 'ASC']
-            ]
-        }]
-
+    Menu.findAll({
+        order: [
+            ['parentId', 'ASC'],
+            ['order', 'ASC']
+        ]
     }).then(data => {
             
         if (data) {
 
-            const nestedObject = {};
-            
-            data.menuItems.forEach(item => {
-                if (item.parentId === null) {
-                    nestedObject[item.id] = item;
-                    nestedObject[item.id].dataValues.children = [];
-                }else {
-                    nestedObject[item.parentId].dataValues.children.push(item);
-                }
-            });
-           
-            res.status(200).send(nestedObject);
+            let nestedData = this.nestMenuItems(data, null, menuName);
+
+            res.status(200).send(Object.values(nestedData)[0].dataValues.children);
 
         } else {
             res.status(404).send({
@@ -165,4 +150,27 @@ exports.getMenuItems = (req, res) => {
             message: "Algún error ha surgido al recuperar el nombre=" + menuName
         });
     });
+}
+
+exports.nestMenuItems = (data, parentId, menuName) => {
+
+    let nestedObject = {};
+
+    data.forEach(function (item) {
+
+        if(item.parentId === null && menuName !== item.name) return;
+
+        if(item.parentId === parentId) {
+
+            let children = module.exports.nestMenuItems(data, item.id);
+
+            if (Object.keys(children).length) {
+                item.dataValues.children = children;
+            }
+
+            nestedObject[item.id] = item;
+        }
+    });
+
+    return nestedObject;
 }

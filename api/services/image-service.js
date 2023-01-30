@@ -24,6 +24,7 @@ module.exports = class ImageService {
                     let oldPath = path.join(__dirname, `../storage/tmp/${image.originalname}`);
 
                     let filename = await fs.access(path.join(__dirname, `../storage/images/gallery/original/${path.parse(image.filename).name}.webp`)).then(async () => {
+                        // Dar al usuario la opción de sobreescribir la imagen
                         return `${path.parse(image.filename).name}-${new Date().getTime()}.webp`;
                     }).catch(async () => {
                         return `${path.parse(image.filename).name}.webp`;
@@ -55,69 +56,61 @@ module.exports = class ImageService {
 
         try{
 
-            for (let key in images) {
+            for (let image in images) {
 
-                if (key.startsWith('images')) {
+                const imageConfigurations =  await ImageConfiguration.findAll({
+                    where: {
+                        entity: entity,
+                        name: images[image].name
+                    }
+                });
+
+                for (let imageConfiguration of imageConfigurations) {
+
+                    for (let file of images[image].files) {
     
-                    let keySplit = key.split('-');
-                    let name = keySplit[1];
-                    let languageAlias = keySplit[2];
-                    let originalFilenames = images[key].split(',');
+                        let imageResize = {};
     
-                    const imageConfigurations =  await ImageConfiguration.findAll({
-                        where: {
+                        await fs.access(path.join(__dirname, `../storage/images/resized/${path.parse(file.filename).name}-${imageConfiguration.widthPx}x${imageConfiguration.heightPx}.webp`)).then(async () => {
+    
+                            let start = new Date().getTime();
+    
+                            let stats = await fs.stat(path.join(__dirname, `../storage/images/resized/${path.parse(file.filename).name}-${imageConfiguration.widthPx}x${imageConfiguration.heightPx}.webp`));
+                            imageResize = await sharp(path.join(__dirname, `../storage/images/resized/${path.parse(file.filename).name}-${imageConfiguration.widthPx}x${imageConfiguration.heightPx}.webp`)).metadata();
+                            imageResize.size = stats.size;
+    
+                            let end = new Date().getTime();
+    
+                            imageResize.latency = end - start;                        
+    
+                        }).catch(async () => {
+    
+                            let start = new Date().getTime();
+                            
+                            imageResize = await sharp(path.join(__dirname, `../storage/images/gallery/original/${file.filename}`))
+                            .resize(imageConfiguration.widthPx, imageConfiguration.heightPx)
+                            .webp({ nearLossless: true })
+                            .toFile(path.join(__dirname, `../storage/images/resized/${path.parse(file.filename).name}-${imageConfiguration.widthPx}x${imageConfiguration.heightPx}.webp`));
+                            
+                            let end = new Date().getTime();
+    
+                            imageResize.latency = end - start;                        
+                        });
+    
+                        await Image.create({
+                            imageConfigurationId: imageConfiguration.id,
+                            entityId: entityId,
                             entity: entity,
-                            name: name
-                        }
-                    });
-    
-                    for (let imageConfiguration of imageConfigurations) {
-
-                        for (let originalFilename of originalFilenames) {
-        
-                            let imageResize = {};
-        
-                            await fs.access(path.join(__dirname, `../storage/images/resized/${originalFilename}-${imageConfiguration.widthPx}x${imageConfiguration.heightPx}.webp`)).then(async () => {
-        
-                                let start = new Date().getTime();
-        
-                                let stats = await fs.stat(path.join(__dirname, `../storage/images/resized/${originalFilename}-${imageConfiguration.widthPx}x${imageConfiguration.heightPx}.webp`));
-                                imageResize = await sharp(path.join(__dirname, `../storage/images/resized/${originalFilename}-${imageConfiguration.widthPx}x${imageConfiguration.heightPx}.webp`)).metadata();
-                                imageResize.size = stats.size;
-        
-                                let end = new Date().getTime();
-        
-                                imageResize.latency = end - start;                        
-        
-                            }).catch(async () => {
-        
-                                let start = new Date().getTime();
-                                
-                                imageResize = await sharp(path.join(__dirname, `../storage/images/gallery/original/${originalFilename}`))
-                                .resize(imageConfiguration.widthPx, imageConfiguration.heightPx)
-                                .webp({ nearLossless: true })
-                                .toFile(path.join(__dirname, `../storage/images/resized/${originalFilename}-${imageConfiguration.widthPx}x${imageConfiguration.heightPx}.webp`));
-                                
-                                let end = new Date().getTime();
-        
-                                imageResize.latency = end - start;                        
-                            });
-        
-                            await Image.create({
-                                imageConfigurationId: imageConfiguration.id,
-                                entityId: entityId,
-                                entity: entity,
-                                name: name,
-                                originalFilename: originalFilename,
-                                resizedFilename: `${originalFilename}-${imageConfiguration.widthPx}x${imageConfiguration.heightPx}.webp`,
-                                title: "prueba",
-                                alt: "prueba",
-                                languageAlias: languageAlias,
-                                mediaQuery: imageConfiguration.mediaQuery,
-                                sizeBytes: imageResize.size,
-                                latency: imageResize.latency,
-                            });     
-                        }
+                            name: images[image].name,
+                            originalFilename: file.filename,
+                            resizedFilename: `${path.parse(file.filename).name}-${imageConfiguration.widthPx}x${imageConfiguration.heightPx}.webp`,
+                            title: file.title,
+                            alt: file.alt,
+                            languageAlias: file.languageAlias,
+                            mediaQuery: imageConfiguration.mediaQuery,
+                            sizeBytes: imageResize.size,
+                            latencyMs: imageResize.latency,
+                        });     
                     }
                 }
             }
@@ -137,6 +130,8 @@ module.exports = class ImageService {
         try{
             await fs.unlink(path.join(__dirname, `../storage/images/gallery/original/${filename}`));
             await fs.unlink(path.join(__dirname, `../storage/images/gallery/thumbnail/${filename}`));
+
+            // Falta borrar las imágenes redimensionadas
             
             return 1;
 
@@ -149,8 +144,10 @@ module.exports = class ImageService {
 
         let images = {};
         let files = await fs.readdir(path.join(__dirname, `../storage/images/gallery/thumbnail`));
+        files = files.filter(file => file !== ".gitignore");
 
         images.filenames = await fs.readdir(path.join(__dirname, `../storage/images/gallery/thumbnail`), { limit: limit, offset: offset});
+        images.filenames = images.filenames.filter(file => file !== ".gitignore");
         images.count = files.length;
     
         return images;
@@ -158,7 +155,7 @@ module.exports = class ImageService {
 
     getImages = async (entity, entityId) => {
 
-        const images = await Image.findAll({
+        const images = await images[image].findAll({
             where: {
                 entity: entity,
                 entityId: entityId

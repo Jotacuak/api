@@ -1,9 +1,10 @@
+import { API_URL } from '../../config/config.js';
+
 class Menu extends HTMLElement {
 
     constructor(){
         super();
         this.shadow = this.attachShadow({ mode: 'open' });
-        this.menu = this.getAttribute('menu');
         this.menuItems = [];
     }
 
@@ -16,10 +17,10 @@ class Menu extends HTMLElement {
     }
 
     async loadData(){
+
+        let url = `${API_URL}/api/admin/menus/display/${this.menu}`;
         
         try{
-
-            let url = `http://127.0.0.1:8080/api/admin/menus/display/${this.menu}`;
 
             let result = await fetch(url, {
                 method: 'GET',
@@ -152,7 +153,7 @@ class Menu extends HTMLElement {
                 <span></span>
             </button>
         </div> 
-        `
+        `;
         let hamburger = this.shadow.getElementById("collapse-button");
         let overlay = this.shadow.getElementById("overlay");
         let menuList = this.shadow.querySelector("#menu ul");
