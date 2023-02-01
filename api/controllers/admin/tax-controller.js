@@ -15,23 +15,36 @@ exports.create = (req, res) => {
 
 exports.findAll = (req, res) => {
 
-    let whereStatement = {};
+    let page = req.query.page || 1;
+    let limit = req.query.size || 10;
+    let offset = (page - 1) * limit;
 
-    if(req.query.type)
-        whereStatement.type = {[Op.substring]: req.query.type};
-        
-    if(req.query.valid)
-        whereStatement.valid = {[Op.substring]: req.query.valid};
+    let whereStatement = {};
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    Tax.findAll({ where: condition }).then(data => {
-        res.status(200).send(data);
+    Tax.findAndCountAll({
+        where: condition, 
+        limit: limit,
+        offset: offset,
+        order: [['createdAt', 'DESC']]
+    })
+    .then(result => {
+
+        result.meta = {
+            total: result.count,
+            pages: Math.ceil(result.count / limit),
+            currentPage: page
+        };
+
+        res.status(200).send(result);
+
     }).catch(err => {
         res.status(500).send({
-            message: err.message || "Algún error ha surgido al recuperar los datos."
+            message: err.errors || "Algún error ha surgido al recuperar los datos."
         });
     });
+
 };
 
 exports.findOne = (req, res) => {

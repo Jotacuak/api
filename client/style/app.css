@@ -1,5 +1,21 @@
 body{
+	background: linear-gradient(90deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	background-size: 400% 400%;
+	animation: gradient 5s ease infinite;
+	height: 100%;
     font-family: 'Comic Sans MS';
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
 }
 
 .main-title{
@@ -78,57 +94,6 @@ body{
     margin-top: 1rem;
     padding: .5rem 1rem;
     width: 100%;
-}
-
-.faqs, .taxes{
-    margin-top: 2rem;
-    width: 90%;
-}
-
-.table-element{
-    border: .1rem solid black;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 1rem auto;
-}
-
-.table-element-texts{
-    margin-left: 1rem;
-}
-
-.table-element-buttons{
-    display: flex;
-    flex-direction: row;
-    margin-top: .8rem
-}
-
-.form-element input,textarea{
-    height: 2rem;
-    width: 100%;
-}
-
-.form-element textarea{
-    height: 15vh;
-    resize: none;
-}
-
-.table-element-button .table-button{
-    background: none;
-    border: none;
-}
-
-.table-element-button .table-button svg{
-    height: 2rem;
-    width: 2rem;
-}
-
-.table-element-button .table-button svg path{
-    fill: hsl(288, 69%, 87%);
-}
-
-.form-element{
-    margin: .5rem 0;
 }
 
 .contact-us-option-icon svg {

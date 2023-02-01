@@ -20,11 +20,11 @@ exports.findAll = (req, res) => {
     let offset = (page - 1) * limit;
 
     let whereStatement = {};
+
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
     User.findAndCountAll({
         where: condition, 
-        attributes: ['id', 'name', 'email'],
         limit: limit,
         offset: offset,
         order: [['createdAt', 'DESC']]

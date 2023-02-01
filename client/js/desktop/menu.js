@@ -12,25 +12,19 @@ class Menu extends HTMLElement {
         this.loadData().then( () => this.render());
     }
 
-    attributeChangedCallback(name, oldValue, newValue){
-        this.render();
-    }
-
     async loadData(){
 
-        let url = `${API_URL}/api/admin/menus/display/${this.menu}`;
+        let url = `${API_URL}/api/admin/menus/display/${this.getAttribute("menu")}`;
         
         try{
 
             let result = await fetch(url, {
-                method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken'),
                 }
             });
     
             let data = await result.json();
-
             this.menuItems = Object.values(data);
 
         }catch(error){
@@ -154,8 +148,7 @@ class Menu extends HTMLElement {
             </button>
         </div> 
         `;
-        let hamburger = this.shadow.getElementById("collapse-button");
-        let overlay = this.shadow.getElementById("overlay");
+
         let menuList = this.shadow.querySelector("#menu ul");
 
         this.menuItems.forEach(menuItem => {
@@ -173,16 +166,23 @@ class Menu extends HTMLElement {
             menuList.appendChild(list);
 
             link.addEventListener("click", (event) => {
-
+    
                 event.preventDefault();
 
-                hamburger.classList.toggle("active");
-                overlay.classList.toggle("active");
-
-            })
-            
+                hamburger.classList.toggle('active');
+                overlay.classList.toggle('active');
+    
+                document.dispatchEvent(new CustomEvent('newUrl', {
+                    detail: {
+                        url: link.getAttribute("href"),
+                        title: link.textContent.toUpperCase(),
+                    }
+                }));
+            });
         });
 
+        let hamburger = this.shadow.getElementById("collapse-button");
+        let overlay = this.shadow.getElementById("overlay");
            
         hamburger.addEventListener("click", (event) => {
 
@@ -196,41 +196,23 @@ class Menu extends HTMLElement {
 
     createSubMenu(menuItem, list) {
 
-        let hamburger = this.shadow.getElementById("collapse-button");
-        let overlay = this.shadow.getElementById("overlay");
-
         if(menuItem.children){
-            
-            list.setAttribute("class", "sub-menu-parent")
 
-            let subList = document.createElement("ul");
-            subList.setAttribute("class", "sub-menu");
+            let subList = document.createElement("ul"); 
+
+            list.classList.add("sub-menu-parent");        
+            subList.classList.add("sub-menu");
 
             menuItem.children.forEach(child => {
 
                 let subItem = document.createElement("li");
                 let subLink = document.createElement("a");
 
-                subList.appendChild(subItem);
-                subItem.appendChild(subLink);
-
                 subLink.setAttribute("href", child.customUrl);
                 subLink.textContent = child.name;
 
-                subLink.addEventListener("click", (event) =>{
-
-                    event.preventDefault();
-
-                    hamburger.classList.toggle("active");
-                    overlay.classList.toggle("active");
-    
-                    document.dispatchEvent(new CustomEvent('newUrl', {
-                        detail: {
-                            url: subLink.getAttribute('href'),
-                            title: subLink.textContent.toUpperCase(),
-                        }
-                    }));
-                })
+                subList.appendChild(subItem);
+                subItem.appendChild(subLink);     
 
                 this.createSubMenu(child,subList);
 

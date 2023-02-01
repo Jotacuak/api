@@ -3,16 +3,14 @@ class Message extends HTMLElement {
     constructor() {
         super();
         this.shadow = this.attachShadow({ mode: 'open' });
-        this.text = this.getAttribute('text');
-        this.type = this.getAttribute('type');
     }
 
-    static get observedAttributes() { return ['text', 'type']; }
+    static get observedAttributes() { return ['message', 'type']; }
 
     connectedCallback() {
         
         document.addEventListener("message", (event =>{
-            this.setAttribute('text', event.detail.text);
+            this.setAttribute('message', event.detail.message);
             this.setAttribute('type', event.detail.type);
         }));
 
@@ -21,85 +19,65 @@ class Message extends HTMLElement {
 
     attributeChangedCallback(name, oldValue, newValue){
 
-        let notificationWrapper = this.shadow.getElementById("notification-wrapper");
-        let notification = this.shadow.getElementById("notification");
-        let notificationText = this.shadow.getElementById("notification-message");
-        notification.classList.add("active");
-        notificationWrapper.classList.add("active");
+        if(name == 'message'){
+            let message = this.shadow.querySelector('#alert-message');
+            message.classList.add('active');
 
-        setTimeout(() => {
-            notification.classList.add("active");
-        }, 500);
+            this.shadow.querySelector('p').textContent = newValue;
 
-        setTimeout(() => {
-            notificationWrapper.classList.remove("active");
-            notification.classList.remove("active");
-            notification.classList.remove(this.getAttribute('type'));
-        }, 5000);
-
-        if(name == "text"){       
-            let p = document.createElement("p");
-            notificationText.append(newValue, p);
+            setTimeout(function(){ 
+                message.classList.remove('active');
+            }, 7000);
         }
 
-        if(name == "type"){
-            notification.classList.add(newValue);
+        if(name == 'type'){
+            let message = this.shadow.querySelector('#alert-message');
+            message.classList.add(newValue);
         }
     }
+
 
     render() {
 
         this.shadow.innerHTML = 
         `
         <style>
-
-            #notification{
-                height: 3vh;
-                left: 40%;
-                padding: 1rem;
+            #alert-message{
+                background-color: hsl(0, 0%, 100%);
+                top: 3vh;
+                opacity: 0;
+                padding: 0 1em;
                 position: fixed;
-                top: -100vh;
-                z-index: 6001
+                transition: opacity 0.3s;
+                right: 5%;
+                width: max-content;
+                z-index: -1;
             }
 
-            #notification.mistake{
-                background-color: red;
+            #alert-message.success{
+                border-bottom: 0.2em solid hsl(207, 85%, 69%);
             }
 
-            #notification.success{
-                background-color: green;
+            #alert-message.error{
+                border-bottom: 0.2em solid hsl(0, 100%, 50%);
             }
 
-            #notification.active{
-                top: 30%;
+            #alert-message.active{
+                opacity: 1;
+                z-index: 1;
             }
 
-            #notification-wrapper{
-                background-color: hsl(288, 69%, 87%);
-                height: 100%;
-                left: 0;
-                position: fixed;
-                top: -100vh;
-                transition: top 0.5s;
-                width: 100%;
-                z-index: 5001;
+            p{
+                font-family: 'Ubuntu';
+                font-size: 1.2em;
             }
-            
-            #notification-wrapper.active{
-                top: 0vh;
-            }
-        
         </style>
 
-        <div id="notification-wrapper">
-            <div id="notification">
-                <div id="notification-message"></div>
-            </div>
-        </div>
-
-        `;        
-              
+        <div id="alert-message">
+            <p></p>
+            <div id="alert-color"></div>
+        </div>`;	
     }
 }
 
-customElements.define('message-component', Message);
+customElements.define('alert-message-component', Message);

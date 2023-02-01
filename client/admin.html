@@ -12,102 +12,24 @@
         <header>
             <div class="two-columns-aside">
                 <div class="aside-column">
-                    <menu-hamburguer-component menu="admin-menu"></menu-hamburguer-component>
+                    <menu-hamburguer-component menu="admin-header"></menu-hamburguer-component>
                 </div> 
                 <div class="main-column">
-                    <page-title-component title="Admin Faqs"></page-title-component>
+                    <page-title-component title="ADMIN"></page-title-component>
                 </div>   
             </div>
         </header>
         <body>
-            <message-component></message-component>
-            <div class="faqs desktop-two-columns">
-                <div class="column">
-                    <table-component url="/api/admin/faqs"></table-component>
-                    <!-- <div class="table-element">
-                        <div class="table-element-texts">
-                            <div class="table-element-text">
-                                <h5>Name: Uno</h5>
-                            </div>
-                            <div class="table-element-text"></div>
-                        </div>
-                        <div class="table-element-buttons">
-                            <form id="admin-form" method="PUT" action="http://127.0.0.1:8080/api/admin/faqs">
-                                <div class="table-element-button">
-                                    <button type="submit" id="edit-button" class="table-button">
-                                        <svg viewBox="0 0 24 24">
-                                            <path fill="currentColor" d="M20 2H4C2.89 2 2 2.89 2 4V16C2 17.11 2.9 18 4 18H8V21C8 21.55 8.45 22 9 22H9.5C9.75 22 10 21.9 10.2 21.71L13.9 18H20C21.1 18 22 17.1 22 16V4C22 2.89 21.1 2 20 2M9.08 15H7V12.91L13.17 6.72L15.24 8.8L9.08 15M16.84 7.2L15.83 8.21L13.76 6.18L14.77 5.16C14.97 4.95 15.31 4.94 15.55 5.16L16.84 6.41C17.05 6.62 17.06 6.96 16.84 7.2Z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </form>
-                            <form id="admin-form" method="DELETE" action="http://127.0.0.1:8080/api/admin/faqs">
-                                <div class="table-element-button">
-                                    <button type="submit" id="delete-button" class="table-button">
-                                        <svg viewBox="0 0 24 24">
-                                            <path fill="currentColor" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M9,8H11V17H9V8M13,8H15V17H13V8Z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="table-element">
-                        <div class="table-element-texts">
-                            <div class="table-element-text">
-                                <h5>Name: Uno</h5>
-                            </div>
-                            <div class="table-element-text"></div>
-                        </div>
-                        <div class="table-element-buttons">
-                            <form id="admin-form" method="PUT" action="http://127.0.0.1:8080/api/admin/faqs">
-                                <div class="table-element-button">
-                                    <button type="submit" id="edit-button" class="table-button">
-                                        <svg viewBox="0 0 24 24">
-                                            <path fill="currentColor" d="M20 2H4C2.89 2 2 2.89 2 4V16C2 17.11 2.9 18 4 18H8V21C8 21.55 8.45 22 9 22H9.5C9.75 22 10 21.9 10.2 21.71L13.9 18H20C21.1 18 22 17.1 22 16V4C22 2.89 21.1 2 20 2M9.08 15H7V12.91L13.17 6.72L15.24 8.8L9.08 15M16.84 7.2L15.83 8.21L13.76 6.18L14.77 5.16C14.97 4.95 15.31 4.94 15.55 5.16L16.84 6.41C17.05 6.62 17.06 6.96 16.84 7.2Z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </form>
-                            <form id="admin-form" method="DELETE" action="http://127.0.0.1:8080/api/admin/faqs">
-                                <div class="table-element-button">
-                                    <button type="submit" id="delete-button" class="table-button">
-                                        <svg viewBox="0 0 24 24">
-                                            <path fill="currentColor" d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M9,8H11V17H9V8M13,8H15V17H13V8Z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div> -->
-                </div>   
-               
+            <div id="gradient"></div>
+            <modal-delete-component></modal-delete-component>
+            <div class="desktop-two-columns">
+                <div class="table column">
+                    <table-component></table-component>
+                </div>             
                 <div class="form column">
-                    <form id="admin-form" method="POST" action="http://127.0.0.1:8080/api/admin/faqs">                             
-                        <div class="form-element">
-                            <label for="username">Nombre</label>
-                        </div>            
-                        <div class="form-element">
-                            <input id="name" type="name" class="form-control input-big email" value="" name="name">
-                        </div>            
-                        <div class="form-element">
-                            <label for="question">Pregunta</label>
-                        </div>            
-                        <div class="form-element">
-                            <input id="question" type="text" class="form-control input-big password" name="question">
-                        </div> 
-                        <div class="form-element">
-                            <label for="answer">Respuesta</label>
-                        </div>            
-                        <div class="form-element">
-                            <textarea id="answer" type="text" class="form-control input-big password" name="answer"></textarea>
-                        </div>                 
-                        <div class="form-element">
-                            <button type="submit" id="store-button" class="admin-submit-button">
-                                Enviar
-                            </button>
-                        </div>
-                    </form>
+                    <form-component></form-component>
+            
+                    <alert-message-component></alert-message-component>
                 </div>
             </div>
 
