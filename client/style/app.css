@@ -32,11 +32,11 @@ body{
 }
 
 .two-columns-aside .main-column{
-    width: 70%
+    width: 60%
 }
 
 .two-columns-aside .aside-column{
-    width: 22%;
+    width: 32%;
 }
 
 .desktop-two-columns{

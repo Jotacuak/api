@@ -22,11 +22,11 @@
         <body>
             <div id="gradient"></div>
             <modal-delete-component></modal-delete-component>
-            <div class="desktop-two-columns">
-                <div class="table column">
+            <div class="two-columns-aside">
+                <div class="table aside-column">
                     <table-component></table-component>
                 </div>             
-                <div class="form column">
+                <div class="form main-column">
                     <form-component></form-component>
             
                     <alert-message-component></alert-message-component>
@@ -34,19 +34,5 @@
             </div>
 
             <script type="module" src="js/app.js"></script>
-            <script>
-                WebFontConfig = {
-                    google: {
-                        families: ['Marcellus SC']
-                    }
-                };  
-                
-                (function(d) {
-                    var wf = d.createElement('script'), s = d.scripts[0];
-                    wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js';
-                    wf.async = true;
-                    s.parentNode.insertBefore(wf, s);
-                })(document);
-            </script>
         </body>
     </html>

@@ -6,6 +6,9 @@ class Table extends HTMLElement {
         super();
         this.shadow = this.attachShadow({ mode: 'open' });
         this.tableDatas = [];
+        this.total = "";
+        this.currentPage = "";
+        this.lastPage = "";
     }
 
     static get observedAttributes() { return ['url']; }
@@ -17,7 +20,7 @@ class Table extends HTMLElement {
             this.setAttribute('url', event.detail.url)
         }));
 
-        document.addEventListener("removeElement",( event =>{  
+        document.addEventListener("refreshTable",( event =>{  
             this.loadData().then( () => this.render());
         }));
 
@@ -29,18 +32,23 @@ class Table extends HTMLElement {
         this.loadData().then( () => this.render());
     }
 
-    async loadData(){
+    async loadData(pagination){
         
         try{
 
-            let result = await fetch(`${API_URL}${this.getAttribute('url')}`, {
-                method: 'GET',
+            let url = pagination? `${API_URL}${this.getAttribute('url')}/?page=${pagination}` : `${API_URL}${this.getAttribute('url')}`
+
+            let result = await fetch(url , {
                 headers: {
                     'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken'),
                 }
             });
     
             let data = await result.json();
+            
+            this.total = data.meta.total;   
+            this.currentPage = data.meta.currentPage;
+            this.lastPage = data.meta.pages;
 
             this.tableDatas = data.rows;    
 
@@ -109,10 +117,58 @@ class Table extends HTMLElement {
             .table-element-button .table-button svg path{
                 fill: hsl(62, 100%, 75%);
             }
+
+            .table-pagination {
+                margin-top: 1em;
+            }
+           
+            .table-pagination .table-pagination-info{
+                color: hsl(62, 100%, 75%);
+                display: flex;
+                font-family: "Comic Sans MS";
+                justify-content: space-between;
+            }
+    
+            .table-pagination .table-pagination-buttons p{
+                color: hsl(62, 100%, 75%);
+                font-family: "Comic Sans MS";
+                margin: 1rem 0;
+            }
+    
+            .table-pagination-info p{
+                margin: 0;
+            }
+       
+            .table-pagination .table-pagination-button{
+                cursor: pointer;
+                margin-right: 1em;
+            }
+       
+            .table-pagination .table-pagination-button:hover{
+                color: hsl(0, 100%, 50%);
+            }
+       
+            .table-pagination .table-pagination-button.inactive{
+                color: hsl(62, 100%, 75%);
+            }
+    
         </style>
 
         <div class="table"></div>
-
+        <div class="table-pagination">
+            <div class="table-pagination-info">
+                <div class="table-pagination-total"><p><span id="total-page">${this.total}</span> registros</p></div>
+                <div class="table-pagination-pages"><p>Página <span id="current-page">${this.currentPage}</span> de <span id="last-page">${this.lastPage}</span></p></div>
+            </div>
+            <div class="table-pagination-buttons">
+                <p>
+                    <span class="table-pagination-button" id="firstPageUrl">Primera</span>
+                    <span class="table-pagination-button" id="previousPageUrl">Anterior</span>
+                    <span class="table-pagination-button" id="nextPageUrl">Siguiente</span>
+                    <span class="table-pagination-button" id="lastPageUrl">Última</span>
+                </p>
+            </div>
+        </div>
         `;  
         
         this.tableDatas.forEach(tableData => {  
@@ -166,7 +222,7 @@ class Table extends HTMLElement {
                 }else{
 
                     html += `
-                        <button class="table-button" type="submit" data-type="remove" data-url="${API_URL}${this.getAttribute('url')}/${tableData.id}">
+                        <button class="table-button" type="submit" data-type="remove" data-url="${tableData.id}">
                             <svg viewBox="0 0 24 24">
                                 <path d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M9,8H11V17H9V8M13,8H15V17H13V8Z"/>
                             </svg>
@@ -181,7 +237,40 @@ class Table extends HTMLElement {
         });
 
         this.tableButtonsFunction();
-        
+        this.renderPaginationButtons();
+    }
+
+    renderPaginationButtons(){
+
+        let firstPage = this.shadow.getElementById('firstPageUrl');
+        let previousPage = this.shadow.getElementById('previousPageUrl');
+        let nextPage = this.shadow.getElementById('nextPageUrl');
+        let lastPage = this.shadow.getElementById('lastPageUrl');
+
+        firstPage.addEventListener("click", (event) =>{
+
+            this.loadData(1).then( () => this.render());
+        })
+
+        previousPage.addEventListener("click", (event) =>{
+
+            if(parseInt(this.currentPage) > 1){
+                this.loadData(parseInt(this.currentPage) - 1).then( () => this.render());
+            }
+        })
+
+        nextPage.addEventListener("click", (event) =>{
+
+            if(parseInt(this.currentPage) < this.lastPage){
+                this.loadData(parseInt(this.currentPage) + 1).then( () => this.render());
+            }
+          
+        })
+
+        lastPage.addEventListener("click", (event) =>{
+
+            this.loadData(this.lastPage).then( () => this.render());
+        })
     }
 
     setTableStructure() {
@@ -253,11 +342,9 @@ class Table extends HTMLElement {
 
                             document.dispatchEvent(new CustomEvent('openModalDelete', {
                                 detail: {
-                                    url: button.dataset.url,
+                                    id: button.dataset.id,
                                 }
                             }));
-
-                            // document.dispatchEvent(new CustomEvent('startOverlay'));
      
                         break
                     }
@@ -266,11 +353,6 @@ class Table extends HTMLElement {
         }    
     }
 
-    renderTable(){        
-        document.addEventListener("removeElement",( event =>{        
-            this.render();
-        }));
-    }
 }
 
 customElements.define('table-component', Table);

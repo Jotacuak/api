@@ -4,9 +4,13 @@ const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
 
+    console.log(req.body)
+
     User.create(req.body).then(data => {
         res.status(200).send(data);
     }).catch(err => {
+        console.log(err);
+
         res.status(500).send({
             message: err.errors || "Algún error ha surgido al insertar el dato."
         });
@@ -16,7 +20,7 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
 
     let page = req.query.page || 1;
-    let limit = req.query.size || 10;
+    let limit = parseInt(req.query.size) || 10;
     let offset = (page - 1) * limit;
 
     let whereStatement = {};

@@ -1,3 +1,5 @@
+import { API_URL } from '../../config/config.js';
+
 class ModalDelete extends HTMLElement {
 
     constructor() {
@@ -8,7 +10,7 @@ class ModalDelete extends HTMLElement {
     connectedCallback() {
 
         document.addEventListener("openModalDelete",( event =>{        
-            this.setAttribute('url', event.detail.url);
+            this.setAttribute('id', event.detail.id);
             this.shadow.getElementById("modal-delete").classList.add('modal-active');
             this.shadow.getElementById("overlay").classList.add('active');
         }));
@@ -18,38 +20,36 @@ class ModalDelete extends HTMLElement {
 
     async deleteRequest(){
 
-        let response = await fetch(`${this.getAttribute('url')}`, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken'),
-            },
-            method: 'DELETE', 
-        })
-        .then(response => {
-                      
-            if (!response.ok) throw response;
+      let response = await fetch(`${API_URL}${this.getAttribute('url')}/${this.getAttribute('id')}`, {
+          headers: {
+              'X-Requested-With': 'XMLHttpRequest',
+              'Authorization': 'Bearer ' + sessionStorage.getItem('accessToken'),
+          },
+          method: 'DELETE', 
+      })
+      .then(response => {
+                    
+          if (!response.ok) throw response;
 
-            return response.json();
-        })
-        .then(json => {
+          return response.json();
+      })
+      .then(json => {
 
-            document.dispatchEvent(new CustomEvent('removeElement'));
-            document.dispatchEvent(new CustomEvent('message', {
-                detail: {
-                    message: json.message,
-                    type: 'success'
-                }
-            }));
-            
-        })
-        .catch(error =>  {
+          document.dispatchEvent(new CustomEvent('updateTable'));
+          document.dispatchEvent(new CustomEvent('message', {
+              detail: {
+                  message: json.message,
+                  type: 'success'
+              }
+          }));
+          
+      })
+      .catch(error =>  {
 
-            // document.dispatchEvent(new CustomEvent('stopWait'));
-
-            if(error.status == '500'){
-                console.log(error);
-            };
-        });
+          if(error.status == '500'){
+              console.log(error);
+          };
+      });
     };
 
     render() {
@@ -68,7 +68,6 @@ class ModalDelete extends HTMLElement {
                 top: -10%;
                 transition: transform 0.5s;
                 width: 40%;
-                z-index: 6001;
             }
             .modal-delete.modal-active {
                 top: 30%;
