@@ -15,42 +15,33 @@ exports.create = (req, res) => {
 
 exports.findAll = (req, res) => {
 
+    let page = req.query.page || 1;
+    let limit = parseInt(req.query.size) || 10;
+    let offset = (page - 1) * limit;
+
     let whereStatement = {};
-
-    if(req.query.saleId)
-        whereStatement.saleId = {[Op.substring]: req.query.saleId};
-        
-    if(req.query.clientId)
-        whereStatement.clientId = {[Op.substring]: req.query.clientId};
-
-    if(req.query.payMethodId)
-        whereStatement.payMethodId = {[Op.substring]: req.query.payMethodId};
-        
-    if(req.query.reference)
-        whereStatement.reference = {[Op.substring]: req.query.reference};
-
-    if(req.query.totalPrice)
-        whereStatement.totalPrice = {[Op.substring]: req.query.totalPrice};
-        
-    if(req.query.totalBasePrice)
-        whereStatement.totalBasePrice = {[Op.substring]: req.query.totalBasePrice};
-
-    if(req.query.totalIvaPrice)
-        whereStatement.totalIvaPrice = {[Op.substring]: req.query.totalIvaPrice};
-        
-    if(req.query.broadcastDate)
-        whereStatement.broadcastDate = {[Op.substring]: req.query.broadcastDate};
-        
-    if(req.query.broadcastHour)
-        whereStatement.broadcastHour = {[Op.substring]: req.query.broadcastHour};
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    Payback.findAll({ where: condition }).then(data => {
-        res.status(200).send(data);
+    Payback.findAndCountAll({
+        where: condition, 
+        limit: limit,
+        offset: offset,
+        order: [['createdAt', 'DESC']]
+    })
+    .then(result => {
+
+        result.meta = {
+            total: result.count,
+            pages: Math.ceil(result.count / limit),
+            currentPage: page
+        };
+
+        res.status(200).send(result);
+
     }).catch(err => {
         res.status(500).send({
-            message: err.message || "Algún error ha surgido al recuperar los datos."
+            message: err.errors || "Algún error ha surgido al recuperar los datos."
         });
     });
 };

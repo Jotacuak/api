@@ -15,21 +15,33 @@ exports.create = (req, res) => {
 
 exports.findAll = (req, res) => {
 
-    let whereStatement = {};
+    let page = req.query.page || 1;
+    let limit = parseInt(req.query.size) || 10;
+    let offset = (page - 1) * limit;
 
-    if(req.query.contactId)
-        whereStatement.contactId = {[Op.substring]: req.query.contactId};
-        
-    if(req.query.message)
-        whereStatement.message = {[Op.substring]: req.query.message};
+    let whereStatement = {};
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    Email.findAll({ where: condition }).then(data => {
-        res.status(200).send(data);
+    Email.findAndCountAll({
+        where: condition, 
+        limit: limit,
+        offset: offset,
+        order: [['createdAt', 'DESC']]
+    })
+    .then(result => {
+
+        result.meta = {
+            total: result.count,
+            pages: Math.ceil(result.count / limit),
+            currentPage: page
+        };
+
+        res.status(200).send(result);
+
     }).catch(err => {
         res.status(500).send({
-            message: err.message || "Algún error ha surgido al recuperar los datos."
+            message: err.errors || "Algún error ha surgido al recuperar los datos."
         });
     });
 };

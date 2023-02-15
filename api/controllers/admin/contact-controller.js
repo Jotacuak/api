@@ -32,27 +32,33 @@ exports.create = (req, res) => {
 
 exports.findAll = (req, res) => {
 
+    let page = req.query.page || 1;
+    let limit = parseInt(req.query.size) || 10;
+    let offset = (page - 1) * limit;
+
     let whereStatement = {};
-
-    if(req.query.name)
-        whereStatement.name = {[Op.substring]: req.query.name};
-        
-    if(req.query.surname)
-        whereStatement.surname = {[Op.substring]: req.query.surname};
-
-    if(req.query.telephone)
-        whereStatement.telephone = {[Op.substring]: req.query.telephone};
-        
-    if(req.query.email)
-        whereStatement.email = {[Op.substring]: req.query.email};
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    Contact.findAll({ where: condition }).then(data => {
-        res.status(200).send(data);
+    Contact.findAndCountAll({
+        where: condition, 
+        limit: limit,
+        offset: offset,
+        order: [['createdAt', 'DESC']]
+    })
+    .then(result => {
+
+        result.meta = {
+            total: result.count,
+            pages: Math.ceil(result.count / limit),
+            currentPage: page
+        };
+
+        res.status(200).send(result);
+
     }).catch(err => {
         res.status(500).send({
-            message: err.message || "Algún error ha surgido al recuperar los datos."
+            message: err.errors || "Algún error ha surgido al recuperar los datos."
         });
     });
 };

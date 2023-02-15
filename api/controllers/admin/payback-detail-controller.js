@@ -15,36 +15,33 @@ exports.create = (req, res) => {
 
 exports.findAll = (req, res) => {
 
+    let page = req.query.page || 1;
+    let limit = parseInt(req.query.size) || 10;
+    let offset = (page - 1) * limit;
+
     let whereStatement = {};
-
-    if(req.query.paybackId)
-        whereStatement.paybackId = {[Op.substring]: req.query.paybackId};
-        
-    if(req.query.productId)
-        whereStatement.productId = {[Op.substring]: req.query.productId};
-
-    if(req.query.amount)
-        whereStatement.amount = {[Op.substring]: req.query.amount};
-        
-    if(req.query.price)
-        whereStatement.price = {[Op.substring]: req.query.price};
-
-    if(req.query.measurementUnit)
-        whereStatement.measurementUnit = {[Op.substring]: req.query.measurementUnit};
-        
-    if(req.query.productName)
-        whereStatement.productName = {[Op.substring]: req.query.productName};
-        
-    if(req.query.ivaType)
-        whereStatement.ivaType = {[Op.substring]: req.query.ivaType};
 
     let condition = Object.keys(whereStatement).length > 0 ? {[Op.and]: [whereStatement]} : {};
 
-    PaybackDetail.findAll({ where: condition }).then(data => {
-        res.status(200).send(data);
+    PaybackDetail.findAndCountAll({
+        where: condition, 
+        limit: limit,
+        offset: offset,
+        order: [['createdAt', 'DESC']]
+    })
+    .then(result => {
+
+        result.meta = {
+            total: result.count,
+            pages: Math.ceil(result.count / limit),
+            currentPage: page
+        };
+
+        res.status(200).send(result);
+
     }).catch(err => {
         res.status(500).send({
-            message: err.message || "Algún error ha surgido al recuperar los datos."
+            message: err.errors || "Algún error ha surgido al recuperar los datos."
         });
     });
 };
