@@ -131,8 +131,6 @@ class Form extends HTMLElement {
         })        
         .then(json => {
 
-            console.log(json);
-
             Object.entries(json).forEach(([key, value]) => {
 
                 if(this.shadow.querySelector(`[name="${key}"]`)){
