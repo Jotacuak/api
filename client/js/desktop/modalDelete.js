@@ -7,7 +7,13 @@ class ModalDelete extends HTMLElement {
         this.shadow = this.attachShadow({ mode: 'open' });
     }
 
+    static get observedAttributes() { return ['url']; }
+
     connectedCallback() {
+
+        document.addEventListener("newUrl",( event =>{
+          this.setAttribute('url', event.detail.url)
+        }));
 
         document.addEventListener("openModalDelete",( event =>{        
             this.setAttribute('id', event.detail.id);
@@ -35,7 +41,7 @@ class ModalDelete extends HTMLElement {
       })
       .then(json => {
 
-          document.dispatchEvent(new CustomEvent('updateTable'));
+          document.dispatchEvent(new CustomEvent('refreshTable'));
           document.dispatchEvent(new CustomEvent('message', {
               detail: {
                   message: json.message,

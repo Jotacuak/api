@@ -133,11 +133,55 @@ class Form extends HTMLElement {
 
             console.log(json);
 
-            for (const [key, value] of Object.entries(json)) {
-                if(this.shadow.querySelector(`input[name="${key}"]`)){
-                    this.shadow.querySelector(`input[name="${key}"]`).value = value;
+            Object.entries(json).forEach(([key, value]) => {
+
+                if(this.shadow.querySelector(`[name="${key}"]`)){
+    
+                    this.shadow.querySelector(`[name="${key}"]`).value = value;
+    
+                    if(this.shadow.querySelector(`[name="${key}"]`).tagName == 'SELECT'){
+    
+                        let options = this.shadow.querySelector(`[name="${key}"]`).querySelectorAll('option');
+    
+                        options.forEach(option => {
+                            if(option.value == value){
+                                option.setAttribute('selected', true);
+                            }
+                        });
+                    }
+    
+                    if(this.shadow.querySelector(`[name="${key}"]`).type == 'radio'){
+    
+                        let radios = this.shadow.querySelector(`[name="${key}"]`).closest('.form-element').querySelectorAll('input[type="radio"]');
+    
+                        radios.forEach(radio => {
+                            if(radio.value == value){
+                                radio.setAttribute('checked', true);
+                            }
+                        });
+                    }  
+    
+                    if(this.shadow.querySelector(`[name="${key}"]`).type == 'checkbox'){
+    
+                        let checkbox = this.shadow.querySelectorAll(`[name="${key}"]`);
+    
+                        checkbox.forEach(check => {
+                            if(check.value == value){
+                                check.setAttribute('checked', true);
+                            }
+                        });
+                    }
                 }
-            }    
+    
+                if(key == 'images'){
+    
+                    document.dispatchEvent(new CustomEvent('showImages', {
+                        detail: {
+                            images: value
+                        }
+                    }));
+                }
+            });
         })
         .catch(error => {
 
@@ -288,8 +332,8 @@ class Form extends HTMLElement {
             }
 
             .errors-container .error-container span{
-                color: hsl(0, 0%, 50%);
-                font-family: 'Roboto' , sans-serif;
+                color: hsl(271, 100%, 50%);
+                font-family: "Comic Sans MS";
                 font-size: 1em;
                 font-weight: 600;
             }
@@ -311,6 +355,9 @@ class Form extends HTMLElement {
                         </svg>
                     </button>
                 </div>
+            </div>
+            <div class="errors-container">
+
             </div>
             <div id="tab-content" class="content"></div>        
         </form>
@@ -703,7 +750,7 @@ class Form extends HTMLElement {
                 "message": "El campo debe contener una tarjeta de crédito válida"
             },        
             "isbn": {
-                "regex": /^(?:\d[\ |-]?){9}[\d|X]$/g,
+                "regex": /^\d{9}$/g,
                 "message": "El campo debe contener un ISBN válido"
             },
             "iban": {
@@ -1142,6 +1189,87 @@ class Form extends HTMLElement {
                         }
                     }
                 };
+            
+            case '/api/admin/books':
+
+                return {
+                    tabs:{
+                        main: {
+                            label: 'Principal',
+                        },
+                    },
+                    
+                    tabsContent: {
+                    
+                        main: {
+                            rows:{
+                                row1: {
+                                    formElements:{
+                                        title: {
+                                            label: 'Título',
+                                            element: 'input',
+                                            maxLength: '10',
+                                            type: 'text',
+                                            placeholder: '',
+                                            required: true,
+                                            validate: 'only-letters'
+                                        },
+                                        author: {
+                                            label: 'Autor',
+                                            element: 'input',
+                                            type: 'text',
+                                            placeholder: '',
+                                            required: true,
+                                            validate: 'only-letters'
+                                        }
+                                    }
+                                },
+                                row2: {
+                                    formElements:{
+                                        isbn: {
+                                            label: 'Isbn',
+                                            element: 'input',
+                                            maxLength: '10',
+                                            type: 'text',
+                                            placeholder: '',
+                                            required: true,
+                                            validate: 'isbn'
+                                        },
+                                        pageCount: {
+                                            label: 'Número de páginas',
+                                            element: 'input',
+                                            type: 'number',
+                                            placeholder: '',
+                                            required: true,
+                                            validate: 'only-numbers'
+                                        },
+                                        publishedDate: {
+                                            label: 'Fecha de publicación',
+                                            element: 'input',
+                                            type: 'date',
+                                            placeholder: '',
+                                            required: true,
+                                            validate: 'date'
+                                        },
+                                    }
+                                },
+                                row3: {
+                                    formElements:{
+                                        description: {
+                                            label: 'Descripción',
+                                            element: 'textarea',
+                                            maxLength: 100,
+                                            placeholder: '',
+                                            required: true
+                                        }
+                                    }
+                                }
+                            
+                            }
+                        }
+                    }
+                }
+
         }
     }
 
